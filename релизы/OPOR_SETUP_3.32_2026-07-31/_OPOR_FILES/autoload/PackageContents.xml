@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationPackage
+  SchemaVersion="1.0"
+  AutodeskProduct="AutoCAD"
+  ProductType="Application"
+  ProductCode="{37B91766-2092-4B1F-A227-5D3F55A6EFA2}"
+  UpgradeCode="{E56B3183-9FA1-4C48-880D-07201EE704B4}"
+  AppVersion="3.32.0"
+  FriendlyVersion="3.32.0"
+  Name="OPOR"
+  Description="Level 3D and Level PRO support layout for AutoCAD"
+  Author="sayan group">
+  <CompanyDetails Name="sayan group" Email="project@sayangroup.ru" />
+  <RuntimeRequirements OS="Win64" Platform="AutoCAD|AutoCAD*" />
+  <Components Description="OPOR AutoLISP components">
+    <RuntimeRequirements
+      OS="Win64"
+      Platform="AutoCAD|AutoCAD*"
+      SupportPath="./Contents/OPOR/" />
+    <ComponentEntry
+      AppName="OPOR"
+      AppDescription="OPOR AutoLISP bootstrap"
+      ModuleName="./Contents/OPOR_bootstrap.lsp"
+      PerDocument="True"
+      LoadOnAutoCADStartup="False"
+      LoadOnCommandInvocation="True">
+      <Commands GroupName="OPOR_COMMANDS">
+        <Command Local="OPOR" Global="OPOR" />
+        <Command Local="XX" Global="XX" />
+        <Command Local="OPORLOGS" Global="OPORLOGS" />
+        <Command Local="OPORTIN" Global="OPORTIN" />
+        <Command Local="OPORGEOLEVELS" Global="OPORGEOLEVELS" />
+        <Command Local="OPORSLOPELEVELS" Global="OPORSLOPELEVELS" />
+        <Command Local="OPORAUTOLEVEL" Global="OPORAUTOLEVEL" />
+        <Command Local="OPORCLEAN" Global="OPORCLEAN" />
+      </Commands>
+    </ComponentEntry>
+  </Components>
+</ApplicationPackage>

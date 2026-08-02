@@ -1,0 +1,250 @@
+;;; OPOR clean AutoLISP port loader.
+;;; APPLOAD this file. Commands: OPOR, XX, OPORLOGS, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORSLOPELEVELS, OPORGEOLEVELS, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+
+(vl-load-com)
+
+;; Не привязываем выдачу к машине разработчика. ВАЖНО: AutoLISP в AutoCAD не
+;; сообщает путь загружаемого файла — *load-truename* и *load-pathname* там просто
+;; не определены (проверено на 2023: boundp даёт nil). Ветки ниже оставлены только
+;; для платформ, где они есть; реально работают findfile, папка чертежа, корень,
+;; запомненный в реестре, и одноразовый запрос у пользователя.
+(setq *opor-install-root* nil)
+(setq *opor-registry-key* "HKEY_CURRENT_USER\\Software\\OPOR")
+
+;; Один раз найденный корень запоминаем, чтобы следующий старт AutoCAD прошёл
+;; молча, без вопросов и без требования держать плагин рядом с чертежом.
+(defun opor-remembered-root (/ value)
+  (setq value
+    (vl-catch-all-apply 'vl-registry-read (list *opor-registry-key* "Root")))
+  (if (or (vl-catch-all-error-p value) (/= (type value) 'STR))
+    nil
+    value))
+
+(defun opor-remember-root (dir)
+  (vl-catch-all-apply
+    'vl-registry-write
+    (list *opor-registry-key* "Root" dir)))
+
+(defun opor-trim-dir (dir)
+  (if dir (vl-string-right-trim "\\/" dir) nil))
+
+(defun opor-dir-file (dir name)
+  (strcat (opor-trim-dir dir) "\\" name))
+
+(defun opor-dir-has-module-p (dir name)
+  (and dir (/= dir "") (findfile (opor-dir-file dir name))))
+
+(defun opor-add-candidate-dir (dir dirs)
+  (setq dir (opor-trim-dir dir))
+  (if (and dir (/= dir "") (not (member dir dirs)))
+    (cons dir dirs)
+    dirs))
+
+(defun opor-loader-candidates (/ dirs found dwgprefix)
+  (setq dirs '())
+  (if (and (boundp '*opor-root*) *opor-root*)
+    (setq dirs (opor-add-candidate-dir *opor-root* dirs)))
+  (setq dirs (opor-add-candidate-dir (opor-remembered-root) dirs))
+  (if (and (boundp '*load-pathname*) *load-pathname*)
+    (setq dirs (opor-add-candidate-dir (vl-filename-directory *load-pathname*) dirs)))
+  (if (and (boundp '*load-truename*) *load-truename*)
+    (setq dirs (opor-add-candidate-dir (vl-filename-directory *load-truename*) dirs)))
+  (if (setq found (findfile "opor-loader.lsp"))
+    (setq dirs (opor-add-candidate-dir (vl-filename-directory found) dirs)))
+  (if (setq found (findfile "OPOR\\opor-loader.lsp"))
+    (setq dirs (opor-add-candidate-dir (vl-filename-directory found) dirs)))
+  (setq dwgprefix (getvar "DWGPREFIX"))
+  (if dwgprefix
+    (progn
+      (setq dirs (opor-add-candidate-dir (strcat dwgprefix "OPOR") dirs))
+      (setq dirs (opor-add-candidate-dir dwgprefix dirs))))
+  (setq dirs (opor-add-candidate-dir *opor-install-root* dirs))
+  (reverse dirs))
+
+;; Последний рубеж: спрашиваем папку у пользователя. Это единственный надёжный
+;; способ узнать её на чужом ПК, где плагин лежит не рядом с чертежом и не в путях
+;; поиска AutoCAD. Спрашивается один раз — дальше берётся из реестра.
+;; Принимаем любой файл поставки: и сам opor-loader.lsp, и стартовый файл,
+;; который лежит на уровень выше рядом с папкой OPOR.
+(defun opor-ask-root (/ selected dir)
+  (setq selected
+    (vl-catch-all-apply
+      'getfiled
+      (list "OPOR: укажите opor-loader.lsp или 00_ЗАГРУЗИТЬ_OPOR.lsp"
+            "opor-loader.lsp" "lsp" 0)))
+  (if (or (vl-catch-all-error-p selected) (not selected))
+    nil
+    (progn
+      (setq dir (opor-trim-dir (vl-filename-directory selected)))
+      (cond
+        ((opor-dir-has-module-p dir "opor-config.lsp") dir)
+        ((opor-dir-has-module-p (strcat dir "\\OPOR") "opor-config.lsp")
+          (strcat dir "\\OPOR"))
+        (T nil)))))
+
+(defun opor-loader-root (/ dirs root)
+  (setq dirs (opor-loader-candidates))
+  (setq root
+    (vl-some
+      '(lambda (dir)
+         (if (opor-dir-has-module-p dir "opor-config.lsp") dir nil))
+      dirs))
+  (if (not root) (setq root (opor-ask-root)))
+  (if root
+    (progn (opor-remember-root root) root)
+    "."))
+
+(setq *opor-root* (opor-loader-root))
+
+(defun opor-loader-path (name)
+  (strcat *opor-root* "\\" name))
+
+(defun opor-loader-candidates-text (/ text)
+  (setq text "")
+  (foreach dir (opor-loader-candidates)
+    (setq text (strcat text "\n- " dir)))
+  text)
+
+(defun opor-load-module (name / path found result)
+  (setq path (opor-loader-path name))
+  (setq found (findfile path))
+  (if found
+    (progn
+      (setq result (vl-catch-all-apply 'load (list found)))
+      (if (vl-catch-all-error-p result)
+        (progn
+          (alert
+            (strcat
+              "OPOR: ошибка загрузки модуля\n"
+              name
+              "\n\n"
+              (vl-catch-all-error-message result)))
+          (exit))
+        result))
+    (progn
+      (alert
+        (strcat
+          "OPOR: не найден модуль\n"
+          path
+          "\n\nПроверенные папки:"
+          (opor-loader-candidates-text)))
+      (exit))))
+
+;; SECURELOAD: без этого AutoCAD блокирует load модулей из недоверенной папки
+;; (Downloads и т.п.) с сообщением "Загрузка файла отменена". Добавляем свою
+;; папку в TRUSTEDPATHS до загрузки модулей. Ошибки намеренно проглатываются:
+;; если setvar недоступен, остаётся прежнее поведение (запрос доверия).
+(defun opor-trust-self-root (/ cur root)
+  (setq root *opor-root*)
+  (if (and root (/= root "") (/= root "."))
+    (progn
+      (setq cur (getvar "TRUSTEDPATHS"))
+      (if (or (null cur) (= cur ""))
+        (setvar "TRUSTEDPATHS" root)
+        (if (not (vl-string-search (strcase root) (strcase cur)))
+          (setvar "TRUSTEDPATHS" (strcat cur ";" root)))))))
+(vl-catch-all-apply 'opor-trust-self-root nil)
+
+(foreach module
+  (list
+    "opor-config.lsp"
+    "opor-errors.lsp"
+    "opor-geometry.lsp"
+    "opor-cleanup.lsp"
+    "opor-dump.lsp"
+    "opor-tables.lsp"
+    "opor-ui.lsp"
+    "opor-dcl.lsp"
+    "opor-trim.lsp"
+    "opor-grid.lsp"
+    "opor-supports.lsp"
+    "opor-levels.lsp"
+    "opor-tiles.lsp"
+    "opor-lags.lsp"
+    "opor-slope.lsp"
+    "opor-height-check.lsp"
+    "opor-write-level.lsp"
+    "opor-auto-level.lsp"
+    "opor-slope-levels.lsp"
+    "opor-geo-levels.lsp"
+    "opor-ring.lsp"
+    "opor-tin.lsp"
+    "opor-core.lsp")
+  (opor-load-module module))
+
+(defun c:OPOR ()
+  (opor-run-safe 'opor-main))
+
+(defun c:XX ()
+  (c:OPOR))
+
+(defun c:OPORLOGS (/ dir)
+  (setq dir (opor-log-directory))
+  (if dir
+    (progn
+      (opor-log (strcat "OPEN LOGS | " dir))
+      (startapp "explorer.exe" (strcat "\"" dir "\"")))
+    (opor-alert "Не удалось создать папку диагностических логов."))
+  (princ))
+
+(defun c:OPORSLOPE ()
+  (opor-run-safe 'opor-command-slope))
+
+(defun c:OPORSLOPEWR ()
+  (opor-run-safe 'opor-command-slope-write))
+
+(defun c:OPORHEIGHTCHECK ()
+  (opor-run-safe 'opor-command-height-check))
+
+(defun c:OPORWRITELEVEL ()
+  (opor-run-safe 'opor-command-write-level))
+
+(defun c:OPORAUTOLEVEL ()
+  (opor-run-safe 'opor-command-auto-level))
+
+(defun c:OPORSLOPELEVELS ()
+  (opor-run-safe 'opor-command-slope-levels))
+
+(defun c:OPORGEOLEVELS ()
+  (opor-run-safe 'opor-command-geo-levels))
+
+(defun c:OPORRING ()
+  (opor-run-safe 'opor-command-ring))
+
+(defun c:OPORTIN ()
+  (opor-run-safe 'opor-command-tin))
+
+(defun c:OPORREGCHECK ()
+  (opor-run-safe 'opor-command-region-check))
+
+(defun c:OPORCHECK ()
+  (opor-run-safe 'opor-command-check))
+
+(defun c:OPORCLEAN ()
+  (opor-run-safe 'opor-command-clean))
+
+(defun c:OPORDUMP ()
+  (opor-run-safe 'opor-dump-created))
+
+(defun c:OPORTABLES ()
+  (opor-run-safe 'opor-dump-all-total-tables))
+
+(defun c:OPOROLD ()
+  (opor-run-safe 'opor-dump-old-near-session))
+
+(defun c:OPORSHOW ()
+  (opor-run-safe 'opor-show-handle))
+
+(defun c:OPORDEBUG ()
+  (opor-debug-session)
+  (princ))
+
+(opor-log
+  (strcat
+    "LOADED | VERSION=" *opor-version*
+    " | ROOT=" *opor-root*
+    " | DWG=" (opor-string (opor-safe-getvar "DWGNAME"))
+    " | ACADVER=" (opor-string (opor-safe-getvar "ACADVER"))
+    " | APPAUTOLOAD=" (opor-string (opor-safe-getvar "APPAUTOLOAD"))))
+(opor-log "Загружено. Команды: OPOR, XX, OPORLOGS, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORSLOPELEVELS, OPORGEOLEVELS, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.")
+(princ)

@@ -1,0 +1,16 @@
+# Бинарные файлы AutoCAD — git не должен трогать переносы строк
+*.dwg  binary
+*.dwt  binary
+*.dvb  binary
+*.dwl  binary
+*.dwl2 binary
+*.bak  binary
+*.zip  binary
+
+# DCL хранится в CP1251 — не нормализовать переносы строк/кодировку
+*.dcl  -text
+
+# Office-документы — бинарные
+*.docx binary
+*.xlsx binary
+*.pdf  binary

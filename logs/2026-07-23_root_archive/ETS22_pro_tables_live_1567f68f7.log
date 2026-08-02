@@ -1,0 +1,122 @@
+[ AutoCAD - Wed Jul 22 14:10:59 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORCLEAN
+
+Очистка OPOR [Session/All] <All>: 
+
+[OPOR] Удалено объектов: 75
+
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.27-tile-size
+Слои: OK
+Блоки MVP: OK
+Размерный стиль ISO-25: OK
+Справочно, отсутствующие будущие блоки: 
+- нетВыполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите внешний контур OPOR: 
+Команда: 
+[OPOR] Проёмов найдено: 0Выполняется регенерация модели.
+
+Команда: 
+Начальная точка сетки <Enter = угол у длинного ребра>: 0,0
+
+Направление сетки <Enter = вдоль длинного ребра>: 
+Точка вставки итоговой таблицы <Enter = справа от контура>: 
+[OPOR] Контур 1 рассчитан: опор=77, длина лаг=33 м, ошибок высот=0.
+Команда: Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите следующий внешний контур OPOR или Enter для завершения: 
+Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Заголовок чертежа: Разбивка опор Level PRO.
+[OPOR] Var завершён: опор=77, длина лаг=33 м, лаг=11 шт, ошибок высот=0, областей=4, треугольников=4, плитка=600\U+00D7600, плитки: целых=40, обрезанных=5.
+Команда: 
+
+Команда: 
+Команда: *Прервано*
+
+Команда: OPORTABLES
+
+========== OPOR TOTAL TABLE BLOCKS ==========
+--- TABLE #1 ---
+    block: OPOR_SUPPORT_SPEC_PRO
+    handle: 363B4
+    layer: контур
+    session: 20260722_141114-104650203
+      SUP_PRO_LOW12 = 0
+      SUP_PRO_LOW20 = 0
+      SUP_PRO_25_35 = 0
+      SUP_PRO_35_50 = 0
+      SUP_PRO_50_80 = 75
+      SUP_PRO_80_140 = 2
+      SUP_PRO_95_155 = 0
+      SUP_PRO_145_240 = 0
+      SUP_PRO_160_270 = 0
+      SUP_PRO_205_340 = 0
+      SUP_PRO_235_400 = 0
+      SUP_PRO_315_530 = 0
+      SUP_PRO_390_660 = 0
+      SUP_TOTAL = 77
+--- TABLE #2 ---
+    block: OPOR_PARAMS_TILE
+    handle: 363C4
+    layer: контур
+    session: 20260722_141114-104650203
+      AREA = 15
+      COVERING = Плитка 600\U+00D7600\U+00D720
+      STEP_SUPPORT = 500
+      FLOOR = 101
+--- TABLE #3 ---
+    block: OPOR_PARAMS_EXTRA_ROW
+    handle: 363CA
+    layer: контур
+    session: 20260722_141114-104650203
+      LABEL = Кол-во лаг, шт
+      VALUE = 11
+============================================
+
+Команда: 
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

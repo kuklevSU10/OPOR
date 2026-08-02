@@ -1,0 +1,17 @@
+[ AutoCAD - Wed Jul 22 10:24:28 2026  ]----------------------------------------
+1
+
+Command: (load (strcat (getvar "DWGPREFIX") "probe_visual_tables.lsp"))
+
+PVPROBE loaded
+
+Command: PVPROBE
+
+=== PVPROBE BEGIN ===
+DWG=ETS22_pro_visual_source.dwg
+MODELSPACE_TOTAL=1166; error: bad argument type: stringp nil
+
+Command: 
+Command: _.QUIT
+
+Command: 

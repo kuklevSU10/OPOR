@@ -1,0 +1,21 @@
+[ AutoCAD - Thu Jul 23 16:02:42 2026  ]----------------------------------------
+1
+
+Command: (load "C:/Users/user/AppData/Local/Temp/opor_installer_v3311_test/ApplicationPlugins/OPOR.bundle/Contents/OPOR_bootstrap.lsp")
+
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+[OPOR] Автозагрузка v3.31 выполнена. Команды: OPOR, XX.
+
+Command: (princ (strcat "\nBUNDLE3311|VERSION=" *opor-version*))
+
+BUNDLE3311|VERSION=3.31-floor-compositions"\nBUNDLE3311|VERSION=3.31-floor-compositions"
+
+Command: (princ (strcat "\nBUNDLE3311|ROOT=" *opor-root*))
+
+BUNDLE3311|ROOT=C:\Users\user\AppData\Local\Temp\opor_installer_v3311_test\ApplicationPlugins\OPOR.bundle\Contents\OPOR"\nBUNDLE3311|ROOT=C:\\Users\\user\\AppData\\Local\\Temp\\opor_installer_v3311_test\\ApplicationPlugins\\OPOR.bundle\\Contents\\OPOR"
+
+Command: _.QUIT
+_Y
+Really want to discard all changes to drawing? <N> _Y
+
+Command: 

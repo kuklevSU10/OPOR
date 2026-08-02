@@ -1,0 +1,104 @@
+[ AutoCAD - Wed Jul 22 11:17:15 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: 
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: 
+Автоматическое сохранение в C:\Users\user\AppData\Local\Temp\штамб_v0.1_1_20851_e20c0004.sv$ ...
+
+Команда: 
+Команда: 
+Команда: 
+Команда: 
+Команда: 
+Команда: (progn (vl-load-com) (setq _doc (vla-get-ActiveDocument (vlax-get-acad-object))) (setq _sty (vla-Item (vla-get-DimStyles _doc) "ISO-25")) (setvar "DIMBLK" "_OBLIQUE") (setvar "DIMSAH" 0) (setvar "DIMTXSTY" "isocpeur") (setvar "DIMDEC" 0) (vla-CopyFrom _sty _doc) (vla-put-ActiveDimStyle _doc _sty) (princ "\nDIMSTYLE_NATIVE_SAVE|BLK=") (princ (getvar "DIMBLK")) (princ "|DEC=") (princ (getvar "DIMDEC")) (princ "|TXT=") (princ (getvar "DIMTXSTY")) (princ "|DATA=") (princ (vl-princ-to-string (entget (tblobjname "DIMSTYLE" "ISO-25") (list "*")))) (princ)) ; ошибка: Настройка переменной AutoCAD отвергнута: "DIMTXSTY" "isocpeur"
+
+Команда: 
+
+Команда: (progn (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/00_APPLOAD/01_OPOR_PORT.lsp") (princ "\nDIMSTYLE_NATIVE_FIX|") (princ (opor-ensure-dimstyle)) (princ)) 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+DIMSTYLE_NATIVE_FIX|T
+
+Команда: 
+
+Команда: 
+Автоматическое сохранение в C:\Users\user\AppData\Local\Temp\штамб_v0.1_1_20851_e20c0004.sv$ ...
+
+Команда: 
+Команда: 
+Команда: (progn (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/00_APPLOAD/01_OPOR_PORT.lsp") (opor-init-session) (opor-session-set 'tile-mode "p") (opor-session-set 'step-x 500.0) (opor-session-set 'step-y 400.0) (opor-session-set 'tile-size-x 600.0) (opor-session-set 'tile-size-y 300.0) (opor-session-set 'tile-thickness 20.0) (princ (strcat "\n[P8SMOKE] VER=" *opor-version* "; TABLE=" (opor-new-table-covering-text "p" 600.0 300.0) "; DUMP=" (opor-dump-tiles-text) "\n[P8SMOKE-END]")) (princ)) 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+[P8SMOKE] VER=3.27-tile-size; TABLE=Плитка 600\U+00D7300\U+00D720; DUMP=
+    П8 плитка: размер=600\U+00D7300, шаг опор=500\U+00D7400, целых=0, обрезанных=0
+[P8SMOKE-END]
+
+Команда: 
+
+Команда: (progn (setq _p8d (load_dialog (opor-dcl-file))) (princ (strcat "\n[P8DCL] ID=" (itoa _p8d))) (if (> _p8d 0) (unload_dialog _p8d)) (princ "\n[P8DCL-END]") (princ)) 
+[P8DCL] ID=65
+[P8DCL-END]
+
+Команда: 
+
+Команда: 
+Команда: 
+Команда: 
+Команда: 
+Команда: 
+Команда: 
+Команда: 
+Команда: (progn (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/00_APPLOAD/01_OPOR_PORT.lsp") (setq _c3 (cdr (assoc 'color (nth 8 (opor-built-in-supports "3D"))))) (setq _cp (cdr (assoc 'color (nth 11 (opor-built-in-supports "PRO"))))) (princ (strcat "\n[P2SMOKE] VER=" *opor-version* "; 3D315=" (itoa _c3) "; PRO315=" (itoa _cp) "; OLD82=" (itoa (opor-support-approved-color 82)) "\n[P2SMOKE-END]")) (princ)) 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+[P2SMOKE] VER=3.29-purple-support; 3D315=6; PRO315=6; OLD82=6
+[P2SMOKE-END]
+
+Команда: 
+
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

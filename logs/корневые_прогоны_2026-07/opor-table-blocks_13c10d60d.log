@@ -1,0 +1,76 @@
+[ AutoCAD - Fri Jul 24 14:18:04 2026  ]----------------------------------------
+Выполняется регенерация модели.
+
+**** Системная переменная изменена ****
+Отслеживаемой системной переменной назначено значение, отличное от предпочтительного. Для просмотра изменений воспользуйтесь командой СИСТПЕРЕММОНИТОР.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+Команда: 
+
+Команда: 
+Команда: (setq BS (chr 92))
+"\\"
+
+Команда: (setq UF "C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-------0-0---------------------------/056c53bd-b487-413e-b293-5cbc132a82d3/scratchpad/untrusted/OPOR")
+"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-------0-0---------------------------/056c53bd-b487-413e-b293-5cbc132a82d3/scratchpad/untrusted/OPOR"
+
+Команда: (setq UB (vl-string-translate "/" BS UF))
+"C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR"
+
+Команда: (setq PROBE (strcat UB BS "secload_probe.lsp"))
+"C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR\\secload_probe.lsp"
+
+Команда: (setvar "SECURELOAD" 2)
+2
+
+Команда: (setvar "TRUSTEDPATHS" (strcat "C:" BS "Windows"))
+"C:\\Windows"
+
+Команда: (princ (strcat "\n@@BEFORE SL=" (itoa (getvar "SECURELOAD")) " TP=" (getvar "TRUSTEDPATHS")))
+
+@@BEFORE SL=2 TP=C:\Windows"\n@@BEFORE SL=2 TP=C:\\Windows"
+
+Команда: (princ (strcat "\n@@PROBEPATH=" PROBE))
+
+@@PROBEPATH=C:\Users\user\AppData\Local\Temp\claude\C--Users-user-Documents-------0-0---------------------------\056c53bd-b487-413e-b293-5cbc132a82d3\scratchpad\untrusted\OPOR\secload_probe.lsp"\n@@PROBEPATH=C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR\\secload_probe.lsp"
+
+Команда: (setq *SECLOAD-PROBE* nil)
+nil
+
+Команда: (setq r1 (vl-catch-all-apply 'load (list PROBE)))
+#<%catch-all-apply-error%>
+
+Команда: (if (vl-catch-all-error-p r1) (princ (strcat "\n@@LOAD1_ERR " (vl-catch-all-error-message r1))) (princ "\n@@LOAD1_RET_OK"))
+
+@@LOAD1_ERR Загрузка файла отменена: C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-------0-0---------------------------/056c53bd-b487-413e-b293-5cbc132a82d3/scratchpad/untrusted/OPOR/secload_probe.lsp"\n@@LOAD1_ERR Загрузка файла отменена: C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-------0-0---------------------------/056c53bd-b487-413e-b293-5cbc132a82d3/scratchpad/untrusted/OPOR/secload_probe.lsp"
+
+Команда: (princ (strcat "\n@@PROBE1=" (if *SECLOAD-PROBE* "SET" "UNSET")))
+
+@@PROBE1=UNSET"\n@@PROBE1=UNSET"
+
+Команда: (setvar "TRUSTEDPATHS" (strcat (getvar "TRUSTEDPATHS") ";" UB))
+"C:\\Windows;C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR"
+
+Команда: (princ (strcat "\n@@AFTER_TP=" (getvar "TRUSTEDPATHS")))
+
+@@AFTER_TP=C:\Windows;C:\Users\user\AppData\Local\Temp\claude\C--Users-user-Documents-------0-0---------------------------\056c53bd-b487-413e-b293-5cbc132a82d3\scratchpad\untrusted\OPOR"\n@@AFTER_TP=C:\\Windows;C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR"
+
+Команда: (setq *SECLOAD-PROBE* nil)
+nil
+
+Команда: (setq r2 (vl-catch-all-apply 'load (list PROBE)))
+
+Команда: (if (vl-catch-all-error-p r2) (princ (strcat "\n@@LOAD2_ERR " (vl-catch-all-error-message r2))) (princ "\n@@LOAD2_RET_OK"))
+
+@@LOAD2_RET_OK"\n@@LOAD2_RET_OK"
+
+Команда: (princ (strcat "\n@@PROBE2=" (if *SECLOAD-PROBE* "SET" "UNSET")))
+
+@@PROBE2=SET"\n@@PROBE2=SET"
+
+Команда: (princ "\n@@DONE")
+
+@@DONE"\n@@DONE"
+

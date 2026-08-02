@@ -1,0 +1,97 @@
+[ AutoCAD - Wed Jul 22 10:40:35 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: *Прервано*
+
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: 
+Команда: 
+Команда: _properties 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.22-pro-tables
+Слои: OK
+Блоки MVP: не найдены
+- opor_symb3d
+- opor_symbPRO
+Справочно, отсутствующие будущие блоки: 
+- otmetka_oporvb
+- opor_symb
+- opor_symb3d
+- opor_symbPRO
+- table_totl_1
+- table_totl_3D
+- table_totl_PRO
+- table_plitka
+- table_lag
+- table_slope
+- slope
+- проверкаvb3
+
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

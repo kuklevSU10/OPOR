@@ -1,0 +1,12 @@
+[ AutoCAD - Thu Jul 23 14:04:48 2026  ]----------------------------------------
+1
+
+Command: (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/OPOR/opor-loader.lsp")
+; error: LOAD failed: "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/OPOR/opor-loader.lsp"
+
+Command: (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/.codex_tmp_visual/floor_compositions_smoke.lsp")
+; error: LOAD failed: "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/.codex_tmp_visual/floor_compositions_smoke.lsp"
+
+Command: FLOORCOMPOSITIONSMOKE
+Unknown command "FLOORCOMPOSITIONSMOKE".  Press F1 for help.
+

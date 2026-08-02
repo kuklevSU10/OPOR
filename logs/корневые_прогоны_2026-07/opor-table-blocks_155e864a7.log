@@ -1,0 +1,75 @@
+[ AutoCAD - Fri Jul 24 14:19:53 2026  ]----------------------------------------
+Выполняется регенерация модели.
+
+**** Системная переменная изменена ****
+Отслеживаемой системной переменной назначено значение, отличное от предпочтительного. Для просмотра изменений воспользуйтесь командой СИСТПЕРЕММОНИТОР.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+Команда: 
+
+Команда: 
+Команда: (setq BS (chr 92))
+"\\"
+
+Команда: (setq UF "C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-------0-0---------------------------/056c53bd-b487-413e-b293-5cbc132a82d3/scratchpad/untrusted/OPOR")
+"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-------0-0---------------------------/056c53bd-b487-413e-b293-5cbc132a82d3/scratchpad/untrusted/OPOR"
+
+Команда: (setq UB (vl-string-translate "/" BS UF))
+"C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR"
+
+Команда: (setvar "SECURELOAD" 2)
+2
+
+Команда: (setvar "TRUSTEDPATHS" (strcat "C:" BS "Windows;" UB))
+"C:\\Windows;C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR"
+
+Команда: (princ (strcat "\n@@PRELOAD TP=" (getvar "TRUSTEDPATHS")))
+
+@@PRELOAD TP=C:\Windows;C:\Users\user\AppData\Local\Temp\claude\C--Users-user-Documents-------0-0---------------------------\056c53bd-b487-413e-b293-5cbc132a82d3\scratchpad\untrusted\OPOR"\n@@PRELOAD TP=C:\\Windows;C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR"
+
+Команда: (setq LOADER (strcat UB BS "opor-loader.lsp"))
+"C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR\\opor-loader.lsp"
+
+Команда: (setq rr (vl-catch-all-apply 'load (list LOADER)))
+
+[OPOR] LOADED | VERSION=3.31-floor-compositions | ROOT=C:\Users\user\AppData\Local\Temp\claude\C--Users-user-Documents-------0-0---------------------------\056c53bd-b487-413e-b293-5cbc132a82d3\scratchpad\untrusted\OPOR | DWG=opor-table-blocks.dwg | ACADVER=24.2 | APPAUTOLOAD=14
+[OPOR] Загружено. Команды: OPOR, XX, OPORLOGS, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+
+Команда: (if (vl-catch-all-error-p rr) (princ (strcat "\n@@LOADER_ERR " (vl-catch-all-error-message rr))) (princ "\n@@LOADER_OK"))
+
+@@LOADER_OK"\n@@LOADER_OK"
+
+Команда: (princ (strcat "\n@@VERSION=" (if (boundp '*opor-version*) *opor-version* "UNBOUND")))
+
+@@VERSION=3.31-floor-compositions"\n@@VERSION=3.31-floor-compositions"
+
+Команда: (princ (strcat "\n@@ROOT=" (if (boundp '*opor-root*) *opor-root* "UNBOUND")))
+
+@@ROOT=C:\Users\user\AppData\Local\Temp\claude\C--Users-user-Documents-------0-0---------------------------\056c53bd-b487-413e-b293-5cbc132a82d3\scratchpad\untrusted\OPOR"\n@@ROOT=C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-------0-0---------------------------\\056c53bd-b487-413e-b293-5cbc132a82d3\\scratchpad\\untrusted\\OPOR"
+
+Команда: (princ (strcat "\n@@FN_main=" (if (boundp 'opor-main) "OK" "MISSING")))
+
+@@FN_main=OK"\n@@FN_main=OK"
+
+Команда: (princ (strcat "\n@@FN_slope=" (if (boundp 'opor-command-slope) "OK" "MISSING")))
+
+@@FN_slope=OK"\n@@FN_slope=OK"
+
+Команда: (princ (strcat "\n@@FN_tin=" (if (boundp 'opor-command-tin) "OK" "MISSING")))
+
+@@FN_tin=OK"\n@@FN_tin=OK"
+
+Команда: (princ (strcat "\n@@FN_check=" (if (boundp 'opor-command-check) "OK" "MISSING")))
+
+@@FN_check=OK"\n@@FN_check=OK"
+
+Команда: (princ (strcat "\n@@CMD_OPOR=" (if (boundp 'c:OPOR) "OK" "MISSING")))
+
+@@CMD_OPOR=OK"\n@@CMD_OPOR=OK"
+
+Команда: (princ "\n@@DONE")
+
+@@DONE"\n@@DONE"
+

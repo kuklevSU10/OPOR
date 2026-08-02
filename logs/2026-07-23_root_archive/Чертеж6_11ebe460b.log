@@ -1,0 +1,26 @@
+[ AutoCAD - Wed Jul 22 14:22:34 2026  ]----------------------------------------
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+Команда: 
+
+Команда: 
+Команда: 
+Команда: (progn   (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/00_APPLOAD/01_OPOR_PORT.lsp")   (opor-init-session)   (opor-ensure-layer *opor-layer-grid* 8 "Continuous")   (setq _p9e     (entmakex       '((0 . "LWPOLYLINE") (100 . "AcDbEntity") (100 . "AcDbPolyline")         (90 . 4) (70 . 1)         (10 0.0 0.0) (10 6000.0 0.0) (10 6000.0 5000.0) (10 0.0 5000.0))))   (setq _p9b (vlax-ename->vla-object _p9e))   (opor-session-set 'outer-boundary _p9b)   (opor-session-set 'holes '())   (opor-session-set 'base-point '(0.0 0.0 0.0))   (opor-session-set 'direction-point '(1000.0 0.0 0.0))   (opor-session-set 'step-x 500.0)   (opor-session-set 'step-y 500.0)   (opor-session-set 'lag-axis "vect")   (opor-session-set 'board-length 3000.0)   (opor-session-set 'lag-width 40.0)   (opor-session-set 'double-lag-layout "even")   (opor-session-set 'double-lag-step 3000.0)   (setq _p9g (opor-grid-build *opor-session*))   (setq _p9n (cdr (assoc 'node-points _p9g)))   (setq _p9a (vl-remove-if-not '(lambda (p) (< (abs (- (cadr p) 2980.0)) 0.1)) _p9n))   (setq _p9s (vl-remove-if-not '(lambda (p) (< (abs (- (cadr p) 3020.0)) 0.1)) _p9n))   (princ (strcat "\n[P9GEOM] VER=" *opor-version*     "; PAIRSEG=" (itoa (opor-session-get 'dbl-lag-pair-segments))     "; REMOVED=" (itoa (opor-session-get 'dbl-lag-deduped))     "; STAGGER=" (itoa (opor-session-get 'dbl-lag-stagger-support-count))     "; ROWS=" (itoa (opor-session-get 'lag-row-count))     "; LENGTH=" (rtos (opor-session-get 'lag-length-mm) 2 0)     "; PRIMARY=" (vl-princ-to-string (mapcar 'car _p9a))     "; SECONDARY=" (vl-princ-to-string (mapcar 'car _p9s))     "\n[P9GEOM-END]"))   (princ))
+
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+[P9GEOM] VER=3.28-double-lag-layout; PAIRSEG=2; REMOVED=1; STAGGER=12; ROWS=12; LENGTH=72000; PRIMARY=(6000.0 5500.0 5000.0 4500.0 4000.0 3500.0 3000.0 2500.0 2000.0 1500.0 1000.0 500.0 0.0); SECONDARY=(250.0 750.0 1250.0 1750.0 2250.0 2750.0 3250.0 3750.0 4250.0 4750.0 5250.0 5750.0)
+[P9GEOM-END]
+
+Команда: 

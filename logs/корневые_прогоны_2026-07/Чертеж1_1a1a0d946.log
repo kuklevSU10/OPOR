@@ -1,0 +1,64 @@
+[ AutoCAD - Thu Jul 23 20:34:41 2026  ]----------------------------------------
+Выполняется регенерация модели.
+
+**** Системная переменная изменена ****
+Отслеживаемой системной переменной назначено значение, отличное от предпочтительного. Для просмотра изменений воспользуйтесь командой СИСТПЕРЕММОНИТОР.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+Команда: 
+
+Команда: 
+Команда: (setq opor-test-old-secureload (getvar "SECURELOAD"))
+0
+
+Команда: (setq opor-test-old-trustedpaths (getvar "TRUSTEDPATHS"))
+"C:\\Users\\user\\Documents\\Таран\\0_0_ по работке\\плагин дмитрию\\OPOR"
+
+Команда: (setvar "SECURELOAD" 2)
+2
+
+Команда: (setvar "TRUSTEDPATHS" "C:/Users/user/AppData/Local/Temp/OPOR_TRUSTED_LOADER")
+"C:/Users/user/AppData/Local/Temp/OPOR_TRUSTED_LOADER"
+
+Команда: (setq *opor-root* "C:/Users/user/Downloads/OPOR_LITE_SECURELOAD_TEST/OPOR")
+"C:/Users/user/Downloads/OPOR_LITE_SECURELOAD_TEST/OPOR"
+
+Команда: (load "C:/Users/user/AppData/Local/Temp/OPOR_TRUSTED_LOADER/opor-loader.lsp")
+
+[OPOR] LOADED | VERSION=3.31-floor-compositions | ROOT=C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR | DWG=Чертеж1.dwg | ACADVER=24.2 | APPAUTOLOAD=14
+[OPOR] Загружено. Команды: OPOR, XX, OPORLOGS, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+
+Команда: (princ (strcat "\nOPOR_SECURELOAD_VERSION=" *opor-version*))
+
+OPOR_SECURELOAD_VERSION=3.31-floor-compositions"\nOPOR_SECURELOAD_VERSION=3.31-floor-compositions"
+
+Команда: (princ (strcat "\nOPOR_SECURELOAD_ROOT=" *opor-root*))
+
+OPOR_SECURELOAD_ROOT=C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR"\nOPOR_SECURELOAD_ROOT=C:\\Users\\user\\Documents\\Таран\\0_0_ по работке\\плагин дмитрию\\OPOR"
+
+Команда: (princ (strcat "\nOPOR_SECURELOAD_TRUSTED=" (getvar "TRUSTEDPATHS")))
+
+OPOR_SECURELOAD_TRUSTED=C:/Users/user/AppData/Local/Temp/OPOR_TRUSTED_LOADER;C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR"\nOPOR_SECURELOAD_TRUSTED=C:/Users/user/AppData/Local/Temp/OPOR_TRUSTED_LOADER;C:\\Users\\user\\Documents\\Таран\\0_0_ по работке\\плагин дмитрию\\OPOR"
+
+Команда: (if (and (fboundp 'opor-command-slope) (fboundp 'opor-main))
+(_>   (princ "\nOPOR_SECURELOAD_RESULT=PASS")
+(_>   (princ "\nOPOR_SECURELOAD_RESULT=FAIL"))
+; ошибка: no function definition: FBOUNDP
+
+Команда: (setvar "TRUSTEDPATHS" opor-test-old-trustedpaths)
+"C:\\Users\\user\\Documents\\Таран\\0_0_ по работке\\плагин дмитрию\\OPOR"
+
+Команда: (setvar "SECURELOAD" opor-test-old-secureload)
+0
+
+Команда: (princ "\nOPOR_SECURELOAD_RESTORED=YES")
+
+OPOR_SECURELOAD_RESTORED=YES"\nOPOR_SECURELOAD_RESTORED=YES"
+
+Команда: _.QUIT
+_Y
+Отказаться от всех изменений в чертеже? <Н> _Y
+
+Команда: 

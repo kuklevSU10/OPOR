@@ -1,0 +1,734 @@
+[ AutoCAD - Tue Jul 07 09:35:05 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация листов.
+Выполняется регенерация модели.
+
+Загружаются DLL-файлы для работы с моделями.
+
+
+Утилиты меню AutoCAD загружены.*Прервано*
+
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:   <Переход на: Модель>
+Выполняется регенерация модели.
+
+Команда: _APPLOAD
+opor-loader.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.6-dcl-ui
+Слои: OK
+Блоки MVP: OK
+Справочно, отсутствующие будущие блоки: 
+- нет
+
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.6-dcl-ui
+Слои: OK
+Блоки MVP: OK
+Справочно, отсутствующие будущие блоки: 
+- нет
+Выберите внешний контур OPOR: 
+Выберите проёмы на слое областиvb или нажмите Enter, если проёмов нет: 
+Выберите объекты: найдено: 1
+
+Выберите объекты: найдено: 1, всего: 2
+
+Выберите объекты: 
+
+Укажите начальную точку сетки: 
+[OPOR] Ввод параметров отменён.
+
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.6-dcl-ui
+Слои: OK
+Блоки MVP: OK
+Справочно, отсутствующие будущие блоки: 
+- нет
+Выберите внешний контур OPOR: 
+Выберите проёмы на слое областиvb или нажмите Enter, если проёмов нет: 
+Выберите объекты: найдено: 1
+
+Выберите объекты: найдено: 1, всего: 2
+
+Выберите объекты: 
+
+Укажите начальную точку сетки: 
+Укажите направление сетки: 
+Укажите точку вставки итоговой таблицы: 
+[OPOR] MVP завершён: опор=2821, длина лаг=1522 м, лаг=43 шт, крепёж лаги (Level TOP)=2821.
+Команда: 
+
+Команда: 
+Команда: 
+Команда: *Прервано*
+
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.6-dcl-ui
+Слои: OK
+Блоки MVP: OK
+Справочно, отсутствующие будущие блоки: 
+- нет
+
+Команда: 
+Команда: *Прервано*
+
+Команда: OPORDUMP
+
+========== OPOR NEW OBJECT DUMP ==========
+
+===== SESSION 20260707_093925-2331250 =====
+--- ПО ТИПАМ XDATA ---
+    grid-edge : 6
+    grid-v : 61
+    support : 2821
+    table : 1
+--- ПО СЛОЯМ ---
+    0 : 1
+    опорыvb : 2821
+    сеткаvb : 67
+--- НОВАЯ СЕТКА --- линий: 67  длина: 1522332.8 мм = 1522.33 м
+    grid-v: 61 линий, 1421.95 м, min 490.9 мм
+    grid-p: 0 линий, 0 м, min - мм
+--- НОВЫЕ ОПОРЫ --- всего: 2821
+    цвет 30 : 2821 шт
+--- НОВЫЕ ТАБЛИЦЫ --- всего: 1
+    блок: table_totl_1
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 2821
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 2821
+      CHPOL = -
+      DOSKA = -
+      LAG = -
+      PLITKA = -
+      VECTOR = 600
+      PERP = 600
+      LENGTH = 1522
+      QC = 0
+      QR = 0
+=========================================
+
+Команда: 
+Команда: OPORTABLES
+
+========== OPOR TOTAL TABLE BLOCKS ==========
+--- TABLE #1 ---
+    block: table_totl_1
+    handle: 1DB89
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #2 ---
+    block: table_totl_3D
+    handle: 2A2DA
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #3 ---
+    block: table_totl_PRO
+    handle: 2AA14
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #4 ---
+    block: table_totl_PRO
+    handle: 377CE
+    layer: 0
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 637
+      4 = 1401
+      5 = 2982
+      6 = 136
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 5156
+      CHPOL = 101
+      DOSKA = 27
+      LAG = 49
+      PLITKA = 0
+      VECTOR = 500
+      PERP = 400
+      LENGTH = 2434
+      QC = 0
+      QR = 0
+--- TABLE #5 ---
+    block: table_totl_PRO
+    handle: 43426
+    layer: 0
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 650
+      4 = 1239
+      5 = 2697
+      6 = 123
+      7 = 
+      8 = 1
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 867
+      ITOG = 4710
+      CHPOL = 101
+      DOSKA = 27
+      LAG = 49
+      PLITKA = 0
+      VECTOR = 500
+      PERP = 400
+      LENGTH = 2107
+      QC = 0
+      QR = 0
+--- TABLE #6 ---
+    block: table_totl_PRO
+    handle: 4641F
+    layer: 0
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 456
+      4 = 982
+      5 = 2139
+      6 = 94
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 3671
+      CHPOL = 101
+      DOSKA = 27
+      LAG = 49
+      PLITKA = 0
+      VECTOR = 500
+      PERP = 500
+      LENGTH = 1696
+      QC = 0
+      QR = 0
+--- TABLE #7 ---
+    block: table_totl_1
+    handle: 4F5E9
+    layer: 0
+    session: 20260707_093925-2331250
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 2821
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 2821
+      CHPOL = -
+      DOSKA = -
+      LAG = -
+      PLITKA = -
+      VECTOR = 600
+      PERP = 600
+      LENGTH = 1522
+      QC = 0
+      QR = 0
+============================================
+
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.6-dcl-ui
+Слои: OK
+Блоки MVP: OK
+Справочно, отсутствующие будущие блоки: 
+- нет
+Выберите внешний контур OPOR: 
+Выберите проёмы на слое областиvb или нажмите Enter, если проёмов нет: 
+Выберите объекты: найдено: 1
+
+Выберите объекты: найдено: 1, всего: 2
+
+Выберите объекты: 
+
+Укажите начальную точку сетки: 
+Укажите направление сетки: 
+Укажите точку вставки итоговой таблицы: 
+[OPOR] Var завершён: опор=2740, длина лаг=1453 м, лаг=41 шт, ошибок высот=0, областей=42, треугольников=42, крепёж лаги (Level TOP)=2740.
+Команда: 
+
+Команда: 
+Команда: 
+Команда: *Прервано*
+
+Команда: OPORDUMP
+
+========== OPOR NEW OBJECT DUMP ==========
+
+===== SESSION 20260707_093925-2331250 =====
+--- ПО ТИПАМ XDATA ---
+    grid-edge : 6
+    grid-v : 61
+    support : 2821
+    table : 1
+--- ПО СЛОЯМ ---
+    0 : 1
+    опорыvb : 2821
+    сеткаvb : 67
+--- НОВАЯ СЕТКА --- линий: 67  длина: 1522332.8 мм = 1522.33 м
+    grid-v: 61 линий, 1421.95 м, min 490.9 мм
+    grid-p: 0 линий, 0 м, min - мм
+--- НОВЫЕ ОПОРЫ --- всего: 2821
+    цвет 30 : 2821 шт
+--- НОВЫЕ ТАБЛИЦЫ --- всего: 1
+    блок: table_totl_1
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 2821
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 2821
+      CHPOL = -
+      DOSKA = -
+      LAG = -
+      PLITKA = -
+      VECTOR = 600
+      PERP = 600
+      LENGTH = 1522
+      QC = 0
+      QR = 0
+
+===== SESSION 20260707_094217-2503218 =====
+--- ПО ТИПАМ XDATA ---
+    grid-edge : 6
+    grid-v : 61
+    support : 2740
+    table : 1
+    triangle : 42
+--- ПО СЛОЯМ ---
+    0 : 1
+    линии_высот3 : 42
+    опорыvb : 2740
+    сеткаvb : 67
+--- НОВАЯ СЕТКА --- линий: 67  длина: 1453072.5 мм = 1453.07 м
+    grid-v: 61 линий, 1352.69 м, min 1262.6 мм
+    grid-p: 0 линий, 0 м, min - мм
+    session grid lag: 1352.69 м
+    index ranges: v=(-37 5) p=(-10 142)
+    boundary lag candidate: 100.38 м, mode=all
+      outer: 88.14 м, holes: 12.24 м
+    П5 лаги: рядов=41, поперечных удалено=158
+    support split: vertices=30 border=434 nodes=2276
+    border filter: raw=438 after-vertices=434
+    node filter: raw=2276 after-self=2276 after-vertices=2276 after-border=2276
+    крепёж: лаги=Level TOP x2740, плитки= x0 (шаг 0)
+    levels: marks=30 polylines=42 vertices=30 missing-marks=0 triangles=42 height-errors=0
+--- НОВЫЕ ОПОРЫ --- всего: 2740
+    цвет 1 : 439 шт
+    цвет 30 : 64 шт
+    цвет 92 : 717 шт
+    цвет 131 : 1520 шт
+--- НОВЫЕ ТАБЛИЦЫ --- всего: 1
+    блок: table_totl_PRO
+      1 = 
+      2 = 
+      3 = 439
+      4 = 717
+      5 = 1520
+      6 = 64
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 2740
+      CHPOL = 101
+      DOSKA = 27
+      LAG = 49
+      PLITKA = 0
+      VECTOR = 600
+      PERP = 600
+      LENGTH = 1453
+      QC = 0
+      QR = 0
+=========================================
+
+Команда: 
+Команда: OPORTABLES
+
+========== OPOR TOTAL TABLE BLOCKS ==========
+--- TABLE #1 ---
+    block: table_totl_1
+    handle: 1DB89
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #2 ---
+    block: table_totl_3D
+    handle: 2A2DA
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #3 ---
+    block: table_totl_PRO
+    handle: 2AA14
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #4 ---
+    block: table_totl_PRO
+    handle: 377CE
+    layer: 0
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 637
+      4 = 1401
+      5 = 2982
+      6 = 136
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 5156
+      CHPOL = 101
+      DOSKA = 27
+      LAG = 49
+      PLITKA = 0
+      VECTOR = 500
+      PERP = 400
+      LENGTH = 2434
+      QC = 0
+      QR = 0
+--- TABLE #5 ---
+    block: table_totl_PRO
+    handle: 43426
+    layer: 0
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 650
+      4 = 1239
+      5 = 2697
+      6 = 123
+      7 = 
+      8 = 1
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 867
+      ITOG = 4710
+      CHPOL = 101
+      DOSKA = 27
+      LAG = 49
+      PLITKA = 0
+      VECTOR = 500
+      PERP = 400
+      LENGTH = 2107
+      QC = 0
+      QR = 0
+--- TABLE #6 ---
+    block: table_totl_PRO
+    handle: 4641F
+    layer: 0
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 456
+      4 = 982
+      5 = 2139
+      6 = 94
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 3671
+      CHPOL = 101
+      DOSKA = 27
+      LAG = 49
+      PLITKA = 0
+      VECTOR = 500
+      PERP = 500
+      LENGTH = 1696
+      QC = 0
+      QR = 0
+--- TABLE #7 ---
+    block: table_totl_1
+    handle: 4F5E9
+    layer: 0
+    session: 20260707_093925-2331250
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 2821
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 2821
+      CHPOL = -
+      DOSKA = -
+      LAG = -
+      PLITKA = -
+      VECTOR = 600
+      PERP = 600
+      LENGTH = 1522
+      QC = 0
+      QR = 0
+--- TABLE #8 ---
+    block: table_totl_PRO
+    handle: 55792
+    layer: 0
+    session: 20260707_094217-2503218
+      1 = 
+      2 = 
+      3 = 439
+      4 = 717
+      5 = 1520
+      6 = 64
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 831
+      ITOG = 2740
+      CHPOL = 101
+      DOSKA = 27
+      LAG = 49
+      PLITKA = 0
+      VECTOR = 600
+      PERP = 600
+      LENGTH = 1453
+      QC = 0
+      QR = 0
+============================================
+
+Команда: 
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: *Прервано*
+
+Команда: *Прервано*
+
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: *Прервано*
+
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

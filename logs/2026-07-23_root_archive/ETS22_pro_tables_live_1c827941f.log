@@ -1,0 +1,151 @@
+[ AutoCAD - Wed Jul 22 11:48:20 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORCLEAN
+
+Очистка OPOR [Session/All] <All>: 
+
+[OPOR] Удалено объектов: 76
+
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.25-drawing-title
+Слои: OK
+Блоки MVP: OK
+Справочно, отсутствующие будущие блоки: 
+- нетВыполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите внешний контур OPOR: 
+Команда: 
+[OPOR] Проёмов найдено: 0Выполняется регенерация модели.
+
+Команда: 
+Начальная точка сетки <Enter = угол у длинного ребра>: 
+Направление сетки <Enter = вдоль длинного ребра>: 
+Точка вставки итоговой таблицы <Enter = справа от контура>: 
+[OPOR] Контур 1 рассчитан: опор=61, длина лаг=30 м, ошибок высот=61.
+Команда: Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите следующий внешний контур OPOR или Enter для завершения: 
+Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Заголовок чертежа: Разбивка опор Level 3D.
+[OPOR] Var завершён: опор=61, длина лаг=30 м, лаг=10 шт, ошибок высот=61, областей=4, треугольников=4.
+Команда: 
+
+Команда: 
+Команда: 
+Команда: *Прервано*
+
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: *Прервано*
+
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: *Прервано*
+
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: *Прервано*
+
+Команда: 
+Команда: (progn (princ "\nDIMSTYLE_PROBE|") (princ (vl-princ-to-string (entget (tblobjname "DIMSTYLE" "ISO-25")))) (princ)) 
+DIMSTYLE_PROBE|((-1 . <Имя объекта: 273e55b1d80>) (0 . DIMSTYLE) (105 . 58) (330 . <Имя объекта: 273e55b18a0>) (100 . AcDbSymbolTableRecord) (100 . AcDbDimStyleTableRecord) (2 . ISO-25) (70 . 0) (41 . 2.5) (42 . 0.625) (43 . 3.75) (44 . 1.25) (50 . 1.5708) (73 . 0) (74 . 0) (77 . 1) (78 . 8) (140 . 2.5) (141 . 2.5) (143 . 0.0393701) (147 . 0.625) (171 . 3) (172 . 1) (271 . 2) (272 . 2) (274 . 3) (278 . 44) (283 . 0) (284 . 8) (340 . <Имя объекта: 273e55b1d50>))
+
+Команда: 
+
+Команда: (progn (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/00_APPLOAD/01_OPOR_PORT.lsp") (princ "\nDIMSTYLE_SMOKE|RESULT=") (princ (opor-ensure-dimstyle)) (princ "|CURRENT=") (princ (getvar "DIMSTYLE")) (princ "|DATA=") (princ (vl-princ-to-string (entget (tblobjname "DIMSTYLE" "ISO-25")))) (princ)) 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+DIMSTYLE_SMOKE|RESULT=T|CURRENT=ISO-25|DATA=((-1 . <Имя объекта: 273e55b1d80>) (0 . DIMSTYLE) (105 . 58) (330 . <Имя объекта: 273e55b18a0>) (100 . AcDbSymbolTableRecord) (100 . AcDbDimStyleTableRecord) (2 . ISO-25) (70 . 0) (41 . 2.5) (42 . 0.625) (43 . 3.75) (44 . 1.25) (50 . 1.5708) (73 . 0) (74 . 0) (77 . 1) (78 . 8) (140 . 2.5) (141 . 2.5) (143 . 0.0393701) (147 . 0.625) (171 . 3) (172 . 1) (271 . 0) (272 . 2) (274 . 3) (278 . 44) (283 . 0) (284 . 8) (340 . <Имя объекта: 273e55adaa0>) (342 . <Имя объекта: 273e55acf70>))
+
+Команда: 
+
+Команда: (progn (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/00_APPLOAD/01_OPOR_PORT.lsp") (princ "\nDIMSTYLE_REFRESH|RESULT=") (princ (opor-ensure-dimstyle)) (princ "|CURRENT=") (princ (getvar "DIMSTYLE")) (princ "|DIMDEC=") (princ (getvar "DIMDEC")) (princ "|DIMTXSTY=") (princ (getvar "DIMTXSTY")) (princ "|DIMBLK=") (princ (getvar "DIMBLK")) (princ)) 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+DIMSTYLE_REFRESH|RESULT=T|CURRENT=ISO-25|DIMDEC=0|DIMTXSTY=isocpeur|DIMBLK=nil
+
+Команда: 
+
+Команда: (progn (setq _ds (entget (tblobjname "DIMSTYLE" "ISO-25"))) (setq _ar (cdr (assoc 342 _ds))) (princ "\nDIMARROW_PROBE|REF=") (princ _ar) (princ "|BLOCK=") (princ (vl-princ-to-string (entget _ar))) (princ)) 
+DIMARROW_PROBE|REF=<Имя объекта: 273e55acf70>|BLOCK=((-1 . <Имя объекта: 273e55acf70>) (0 . BLOCK) (330 . <Имя объекта: 273e55acf60>) (5 . 12DEF) (100 . AcDbEntity) (67 . 0) (8 . 0) (100 . AcDbBlockBegin) (70 . 0) (10 0.0 0.0 0.0) (-2 . <Имя объекта: 273e55a7800>) (2 . _OBLIQUE) (1 . ))
+
+Команда: 
+Выполняется регенерация модели.
+
+Команда: 
+Команда: (progn (setq _e (handent "36017")) (setq _d (entget _e)) (setq _bn (cdr (assoc 2 _d))) (setq _b (tblobjname "BLOCK" _bn)) (setq _x (entnext _b)) (setq _types nil) (while (and _x (/= "ENDBLK" (cdr (assoc 0 (entget _x))))) (setq _types (cons (cdr (assoc 0 (entget _x))) _types)) (setq _x (entnext _x))) (princ "\nDIMGRAPH_PROBE|BLOCK=") (princ _bn) (princ "|TYPES=") (princ (vl-princ-to-string (reverse _types))) (princ)) 
+DIMGRAPH_PROBE|BLOCK=*D35|TYPES=(LINE LINE LINE LINE nil nil MTEXT POINT POINT POINT)
+
+Команда: 
+
+Команда: OPORCHECK
+
+[OPOR] Проверка OPOR:
+Версия: 3.26-dimstyle
+Слои: OK
+Блоки MVP: OK
+Размерный стиль ISO-25: OK
+Справочно, отсутствующие будущие блоки: 
+- нет
+
+Команда: 
+Команда: Выполняется регенерация модели.
+'_.zoom 
+Укажите угол рамки, введите масштаб (nX или nXП), или 
+[Все/Центр/Динамика/Границы/Предыдущий/Масштаб/Рамка/Объект] <реальное время>: _e 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

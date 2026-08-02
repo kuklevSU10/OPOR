@@ -1,0 +1,21 @@
+[ AutoCAD - Wed Jul 22 10:28:09 2026  ]----------------------------------------
+1
+
+Command: (load (strcat (getvar "DWGPREFIX") "add_pro_to_library.lsp"))
+
+ADDPROLIB loaded
+
+Command: ADDPROLIB
+_.-INSERT Enter block name or [?]: C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\рабочие_прогоны\ETS22_pro_visual_source.dwg 
+Units: Millimeters   Conversion:    1.0000
+Specify insertion point or [Basepoint/Scale/X/Y/Z/Rotate/Explode/REpeat]: _non 
+Enter X scale factor, specify opposite corner, or [Corner/XYZ] <1>: 1 Enter Y scale factor <use X scale factor>: 1 
+Specify rotation angle <0>: 0 
+Command: 
+ADDPROLIB=PASS
+
+Command: _.QSAVE
+
+Command: _.QUIT
+
+Command: 

@@ -1,0 +1,18 @@
+[ AutoCAD - Thu Jul 23 15:00:54 2026  ]----------------------------------------
+1
+
+Command: (load "C:/Users/user/AppData/Local/Temp/opor_workspace_launcher_smoke_20260723/OPOR/opor-loader.lsp")
+; error: quit / exit abort
+
+Command: (princ (strcat "\nDIRECT|VERSION=" *opor-version*))
+; error: bad argument type: stringp nil
+
+Command: (princ (strcat "\nDIRECT|ROOT=" *opor-root*))
+
+DIRECT|ROOT=."\nDIRECT|ROOT=."
+
+Command: _.QUIT
+_Y
+Really want to discard all changes to drawing? <N> _Y
+
+Command: 

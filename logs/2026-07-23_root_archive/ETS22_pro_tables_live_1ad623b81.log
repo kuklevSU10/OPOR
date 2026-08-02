@@ -1,0 +1,109 @@
+[ AutoCAD - Wed Jul 22 10:54:00 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORCLEAN
+
+Очистка OPOR [Session/All] <All>: 
+
+[OPOR] Удалено объектов: 73
+
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.22.2-pro-dump
+Слои: OK
+Блоки MVP: OK
+Справочно, отсутствующие будущие блоки: 
+- нетВыполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите внешний контур OPOR: 
+Команда: 
+[OPOR] Проёмов найдено: 0Выполняется регенерация модели.
+
+Команда: 
+Начальная точка сетки <Enter = угол у длинного ребра>: 
+Направление сетки <Enter = вдоль длинного ребра>: 
+Точка вставки итоговой таблицы <Enter = справа от контура>: 
+[OPOR] Контур 1 рассчитан: опор=61, длина лаг=30 м, ошибок высот=0.
+Команда: Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите следующий внешний контур OPOR или Enter для завершения: 
+Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Var завершён: опор=61, длина лаг=30 м, лаг=10 шт, ошибок высот=0, областей=4, треугольников=4, плитки: целых=40, обрезанных=5.
+Команда: 
+
+Команда: 
+Команда: OPORTABLES
+
+========== OPOR TOTAL TABLE BLOCKS ==========
+--- TABLE #1 ---
+    block: OPOR_SUPPORT_SPEC_PRO
+    handle: 35747
+    layer: контур
+    session: 20260722_105416-92830796
+      SUP_PRO_LOW12 = 0
+      SUP_PRO_LOW20 = 0
+      SUP_PRO_25_35 = 0
+      SUP_PRO_35_50 = 0
+      SUP_PRO_50_80 = 59
+      SUP_PRO_80_140 = 2
+      SUP_PRO_95_155 = 0
+      SUP_PRO_145_240 = 0
+      SUP_PRO_160_270 = 0
+      SUP_PRO_205_340 = 0
+      SUP_PRO_235_400 = 0
+      SUP_PRO_315_530 = 0
+      SUP_PRO_390_660 = 0
+      SUP_TOTAL = 61
+--- TABLE #2 ---
+    block: OPOR_PARAMS_TILE
+    handle: 35757
+    layer: контур
+    session: 20260722_105416-92830796
+      AREA = 15
+      COVERING = Плитка 600\U+00D7600\U+00D720
+      STEP_SUPPORT = 600
+      FLOOR = 101
+============================================
+
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

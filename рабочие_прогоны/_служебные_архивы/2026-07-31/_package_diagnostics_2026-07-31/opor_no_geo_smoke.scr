@@ -1,0 +1,18 @@
+(setvar "FILEDIA" 0)
+(setq *opor-root* (getenv "OPOR_TEST_ROOT"))
+(setq opor-test-load (vl-catch-all-apply 'load (list (strcat *opor-root* "\\opor-loader.lsp"))))
+(princ (strcat "\nTEST_LOAD=" (if (vl-catch-all-error-p opor-test-load) (vl-catch-all-error-message opor-test-load) "OK")))
+(princ (strcat "\nTEST_OPOR=" (if (member "C:OPOR" (atoms-family 1)) "OK" "MISSING")))
+(princ (strcat "\nTEST_TIN=" (if (member "C:OPORTIN" (atoms-family 1)) "OK" "MISSING")))
+(princ (strcat "\nTEST_SLOPELEVELS=" (if (member "C:OPORSLOPELEVELS" (atoms-family 1)) "OK" "MISSING")))
+(princ (strcat "\nTEST_GEO=" (if (member "C:OPORGEOLEVELS" (atoms-family 1)) "PRESENT" "ABSENT")))
+(if (opor-block-exists-p *opor-level-block-name*) (vl-cmdf "_.-PURGE" "_B" *opor-level-block-name* "_N"))
+(princ (strcat "\nTEST_MARK_BEFORE=" (if (opor-block-exists-p *opor-level-block-name*) "PRESENT" "ABSENT")))
+(setq opor-test-import (opor-import-level-block))
+(princ (strcat "\nTEST_MARK_IMPORT=" (if opor-test-import "OK" "FAILED")))
+(princ (strcat "\nTEST_MARK_AFTER=" (if (opor-block-exists-p *opor-level-block-name*) "PRESENT" "ABSENT")))
+(princ (strcat "\nTEST_TABLE_SLOPE_AFTER=" (if (opor-block-exists-p "table_slope") "PRESENT" "ABSENT")))
+(princ (strcat "\nTEST_TABLE_3D_AFTER=" (if (opor-block-exists-p *opor-new-3d-support-table-block*) "PRESENT" "ABSENT")))
+(princ "\nTEST_DONE")
+_.QUIT
+_N

@@ -1,0 +1,21 @@
+[ AutoCAD - Wed Jul 22 10:27:35 2026  ]----------------------------------------
+1
+
+Command: (load (strcat (getvar "DWGPREFIX") "build_table_blocks.lsp"))
+
+BUILDOPORBLOCKS loaded
+
+Command: (load (strcat (getvar "DWGPREFIX") "build_pro_support_block.lsp"))
+
+BUILDPROSUPPORT loaded
+
+Command: BUILDPROSUPPORT
+
+OTB MADE=OPOR_SUPPORT_SPEC_PRO entities=85 attrs=14
+
+Command: 
+Command: _.QSAVE
+
+Command: _.QUIT
+
+Command: 

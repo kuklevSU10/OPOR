@@ -1,0 +1,22 @@
+[ AutoCAD - Wed Jul 22 10:33:28 2026  ]----------------------------------------
+1
+
+Command: (load (strcat (getvar "DWGPREFIX") "opor-loader.lsp"))
+
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+
+Command: (load (strcat (getvar "DWGPREFIX") "pro_import_smoke.lsp"))
+
+ETS22PROIMPORTSMOKE loaded
+
+Command: ETS22PROIMPORTSMOKE
+
+=== ETS22 PRO IMPORT BEGIN ===
+ETS22 PRE_READY=0; error: bad argument type: VLA-OBJECT nil
+
+Command: 
+Command: _.QSAVE
+
+Command: _.QUIT
+
+Command: 

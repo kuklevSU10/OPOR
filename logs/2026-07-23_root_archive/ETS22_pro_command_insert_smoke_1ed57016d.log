@@ -1,0 +1,53 @@
+[ AutoCAD - Wed Jul 22 10:36:09 2026  ]----------------------------------------
+1
+
+Command: (load (strcat (getvar "DWGPREFIX") "opor-loader.lsp"))
+
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+
+Command: (load (strcat (getvar "DWGPREFIX") "pro_command_insert_smoke.lsp"))
+
+ETS22COMMANDINSERT loaded
+
+Command: ETS22COMMANDINSERT
+
+=== ETS22 COMMAND INSERT BEGIN ===_.-INSERT Enter block name or [?]: C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR\opor-table-blocks.dwg 
+Units: Millimeters   Conversion:    1.0000
+Specify insertion point or [Basepoint/Scale/X/Y/Z/Rotate/Explode/REpeat]: _non 
+Enter X scale factor, specify opposite corner, or [Corner/XYZ] <1>: 1 Enter Y scale factor <use X scale factor>: 1 
+Specify rotation angle <0>: 0 
+Command: _.-INSERT Enter block name or [?] <opor-table-blocks>: OPOR_SUPPORT_SPEC_PRO 
+Units: Unitless   Conversion:    1.0000
+Specify insertion point or [Basepoint/Scale/X/Y/Z/Rotate/Explode/REpeat]: _non 
+Enter X scale factor, specify opposite corner, or [Corner/XYZ] <1>: 1 Enter Y scale factor <use X scale factor>: 1 
+Specify rotation angle <0>: 0 
+Command: _.-INSERT Enter block name or [?] <OPOR_SUPPORT_SPEC_PRO>: OPOR_PARAMS_BOARD 
+Units: Unitless   Conversion:    1.0000
+Specify insertion point or [Basepoint/Scale/X/Y/Z/Rotate/Explode/REpeat]: _non 
+Enter X scale factor, specify opposite corner, or [Corner/XYZ] <1>: 1 Enter Y scale factor <use X scale factor>: 1 
+Specify rotation angle <0>: 0 
+Command: 
+ETS22 PRO_ATTRS=14
+ETS22 PRO_TAG|SUP_PRO_LOW12
+ETS22 PRO_TAG|SUP_PRO_LOW20
+ETS22 PRO_TAG|SUP_PRO_25_35
+ETS22 PRO_TAG|SUP_PRO_35_50
+ETS22 PRO_TAG|SUP_PRO_50_80
+ETS22 PRO_TAG|SUP_PRO_80_140
+ETS22 PRO_TAG|SUP_PRO_95_155
+ETS22 PRO_TAG|SUP_PRO_145_240
+ETS22 PRO_TAG|SUP_PRO_160_270
+ETS22 PRO_TAG|SUP_PRO_205_340
+ETS22 PRO_TAG|SUP_PRO_235_400
+ETS22 PRO_TAG|SUP_PRO_315_530
+ETS22 PRO_TAG|SUP_PRO_390_660
+ETS22 PRO_TAG|SUP_TOTAL
+ETS22 BOARD_ATTRS=7
+ETS22 READY_DEFS=1
+=== ETS22 COMMAND INSERT END ===
+
+Command: _.QSAVE
+
+Command: _.QUIT
+
+Command: 

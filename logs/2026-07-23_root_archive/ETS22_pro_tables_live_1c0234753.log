@@ -1,0 +1,91 @@
+[ AutoCAD - Wed Jul 22 12:17:36 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORCLEAN
+
+Очистка OPOR [Session/All] <All>: 
+
+[OPOR] Удалено объектов: 76
+
+Команда: 
+Команда: DIMSTYLE
+
+DIMSTYLE = "ISO-25" (только чтение)
+Команда: 
+DIMSTYLE
+
+DIMSTYLE = "ISO-25" (только чтение)
+Команда: *Прервано*
+
+Команда: _DIMSTYLE
+
+Команда: 
+Команда: (progn (princ "\nDIMSTYLE_USER_SNAPSHOT|") (princ (vl-princ-to-string (entget (tblobjname "DIMSTYLE" "ISO-25") (list "*")))) (princ)) 
+DIMSTYLE_USER_SNAPSHOT|((-1 . <Имя объекта: 273783fc580>) (0 . DIMSTYLE) (105 . 58) (330 . <Имя объекта: 273783fc0a0>) (100 . AcDbSymbolTableRecord) (100 . AcDbDimStyleTableRecord) (2 . ISO-25) (70 . 0) (41 . 2.5) (42 . 0.625) (43 . 3.75) (44 . 1.25) (50 . 1.5708) (73 . 0) (77 . 1) (78 . 8) (140 . 2.5) (141 . 2.5) (143 . 0.0393701) (147 . 0.625) (171 . 3) (172 . 1) (271 . 2) (272 . 2) (274 . 3) (278 . 44) (283 . 0) (284 . 8) (340 . <Имя объекта: 273b6279aa0>) (342 . <Имя объекта: 273af872760>) (-3 (ACAD_DSTYLE_DIMJAG (1070 . 388) (1040 . 1.5)) (ACAD_DSTYLE_DIMTALN (1070 . 392) (1070 . 0))))
+
+Команда: 
+
+Команда: (progn (setq _d (entget (tblobjname "DIMSTYLE" "ISO-25"))) (setq _a (cdr (assoc 342 _d))) (princ "\nDIMSTYLE_USER_ARROW|BLOCK=") (princ (cdr (assoc 2 (entget _a)))) (princ "|HANDLE=") (princ (cdr (assoc 5 (entget _a)))) (princ)) 
+DIMSTYLE_USER_ARROW|BLOCK=_OBLIQUE|HANDLE=12DEE
+
+Команда: 
+
+Команда: (progn (load "C:/Users/user/Documents/Таран/0_0_ по работке/плагин дмитрию/00_APPLOAD/01_OPOR_PORT.lsp") (opor-ensure-dimstyle) (princ "\nDIMSTYLE_FIXED|DEC=") (princ (getvar "DIMDEC")) (princ "|TXSTY=") (princ (getvar "DIMTXSTY")) (princ "|DATA=") (princ (vl-princ-to-string (entget (tblobjname "DIMSTYLE" "ISO-25") (list "*")))) (princ)) 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+DIMSTYLE_FIXED|DEC=0|TXSTY=isocpeur|DATA=((-1 . <Имя объекта: 273783fc580>) (0 . DIMSTYLE) (105 . 58) (330 . <Имя объекта: 273783fc0a0>) (100 . AcDbSymbolTableRecord) (100 . AcDbDimStyleTableRecord) (2 . ISO-25) (70 . 0) (41 . 2.5) (42 . 0.625) (43 . 3.75) (44 . 1.25) (50 . 1.5708) (73 . 0) (74 . 0) (77 . 1) (78 . 8) (140 . 2.5) (141 . 2.5) (143 . 0.0393701) (147 . 0.625) (171 . 3) (172 . 1) (271 . 0) (272 . 2) (274 . 3) (278 . 44) (283 . 0) (284 . 8) (340 . <Имя объекта: 273b6279aa0>) (342 . <Имя объекта: 273af872770>) (-3 (ACAD_DSTYLE_DIMJAG (1070 . 388) (1040 . 1.5)) (ACAD_DSTYLE_DIMTALN (1070 . 392) (1070 . 0))))
+
+Команда: 
+*Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

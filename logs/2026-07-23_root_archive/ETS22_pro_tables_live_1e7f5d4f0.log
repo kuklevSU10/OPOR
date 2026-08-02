@@ -1,0 +1,60 @@
+[ AutoCAD - Wed Jul 22 10:45:10 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPOR
+Повторное определение блока OPOR_SUPPORT_SPEC_3D  пропущено.
+Повторное определение блока OPOR_PARAMS_TILE  пропущено.
+Повторное определение блока OPOR_PARAMS_BOARD  пропущено.
+
+[OPOR] Блоки новых таблиц 3D/PRO загружены.
+[OPOR] Проверка OPOR:
+Версия: 3.22-pro-tables
+Слои: OK
+Блоки MVP: OK
+Справочно, отсутствующие будущие блоки: 
+- нетВыполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите внешний контур OPOR: 
+Команда: 
+[OPOR] Проёмов найдено: 0Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Таблица 'Опоры' не найдена или пуста; переменная высота не сможет разложить диапазоны.
+Команда: 
+
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

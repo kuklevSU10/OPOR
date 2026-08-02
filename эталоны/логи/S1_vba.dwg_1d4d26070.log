@@ -1,0 +1,167 @@
+[ AutoCAD - Mon Jul 06 10:02:01 2026  ]----------------------------------------
+
+Команда: LOGFILEPATH
+
+Новое значение LOGFILEPATH, или . если нет <"C:\Users\user\documents\таран\0_0_ по работке\плагин дмитрию...">: *Прервано*
+
+Команда: 
+Команда: _pasteclip 
+Точка вставки: *Прервано*
+
+Команда: LOGFILEPATH
+
+Новое значение LOGFILEPATH, или . если нет <"C:\Users\user\documents\таран\0_0_ по работке\плагин дмитрию...">: "C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\logs\"
+
+Не удается присвоить данное значение переменной LOGFILEPATH.
+*Неверно*
+
+Команда: (setvar "LOGFILEPATH" "C:\\Users\\user\\Documents\\Таран\\0_0_ по работке\\плагин дмитрию\\logs\\")
+; ошибка: Настройка переменной AutoCAD отвергнута: "LOGFILEPATH" "C:\\Users\\user\\Documents\\Таран\\0_0_ по работке\\плагин дмитрию\\logs\\"
+
+Команда: setvar Неизвестная команда "SETVAR".  Для вызова справки нажмите F1.
+
+Команда: "LOGFILEMODE" Неизвестная команда ""LOGFILEMODE"".  Для вызова справки нажмите F1.
+
+Команда: setvar Неизвестная команда "SETVAR".  Для вызова справки нажмите F1.
+
+Команда: "LOGFILEMODE" Неизвестная команда ""LOGFILEMODE"".  Для вызова справки нажмите F1.
+
+Команда: *Прервано*
+
+Команда: LOGFILEMODE
+
+Новое значение LOGFILEMODE <1>: 1
+
+Команда: _APPLOAD
+opor-loader.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+Команда: 
+Команда: OPORTABLES
+
+========== OPOR TOTAL TABLE BLOCKS ==========
+--- TABLE #1 ---
+    block: table_totl_1
+    handle: 60B85
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #2 ---
+    block: table_totl_3D
+    handle: 60BA5
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #3 ---
+    block: table_totl_PRO
+    handle: 60BC4
+    layer: _SG_Support
+    session: old/no-xdata
+      1 = 
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 
+      ITOG = 
+      CHPOL = 0
+      DOSKA = 0
+      LAG = 0
+      PLITKA = 0
+      VECTOR = 0
+      PERP = 0
+      LENGTH = 
+      QC = 
+      QR = 
+--- TABLE #4 ---
+    block: table_totl_1
+    handle: 60E72
+    layer: 0
+    session: old/no-xdata
+      1 = 60
+      2 = 
+      3 = 
+      4 = 
+      5 = 
+      6 = 
+      7 = 
+      8 = 
+      9 = 
+      10 = 
+      11 = 
+      12 = 
+      13 = 
+      AREA = 15
+      ITOG = 60
+      CHPOL = -
+      DOSKA = -
+      LAG = -
+      PLITKA = -
+      VECTOR = 600
+      PERP = 600
+      LENGTH = 30
+      QC = 0
+      QR = 0
+============================================
+
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

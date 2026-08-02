@@ -1,0 +1,62 @@
+[ AutoCAD - Tue Jul 21 16:39:23 2026  ]----------------------------------------
+Выполняется регенерация модели.
+
+**** Системная переменная изменена ****
+Отслеживаемой системной переменной назначено значение, отличное от предпочтительного. Для просмотра изменений воспользуйтесь командой СИСТПЕРЕММОНИТОР.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+Команда: 
+
+Команда: 
+Команда: (load (strcat (getvar "DWGPREFIX") "verify_table_blocks.lsp"))
+
+VERIFYOPORBLOCKS loaded
+
+Команда: VERIFYOPORBLOCKS
+
+=== VTB BEGIN ===
+VTB BLOCK=OPOR_SUPPORT_SPEC_3D
+VTB TYPE|ATTDEF|11
+VTB TYPE|CIRCLE|10
+VTB TYPE|LINE|23
+VTB TYPE|LWPOLYLINE|10
+VTB TYPE|MTEXT|26
+VTB TAG|SUP_3D_145_240
+VTB TAG|SUP_3D_160_270
+VTB TAG|SUP_3D_205_340
+VTB TAG|SUP_3D_235_400
+VTB TAG|SUP_3D_315_530
+VTB TAG|SUP_3D_35_50
+VTB TAG|SUP_3D_390_660
+VTB TAG|SUP_3D_50_80
+VTB TAG|SUP_3D_80_140
+VTB TAG|SUP_3D_95_155
+VTB TAG|SUP_TOTAL
+VTB BLOCK=OPOR_PARAMS_TILE
+VTB TYPE|ATTDEF|4
+VTB TYPE|LINE|8
+VTB TYPE|MTEXT|4
+VTB TAG|AREA
+VTB TAG|COVERING
+VTB TAG|FLOOR
+VTB TAG|STEP_SUPPORT
+VTB BLOCK=OPOR_PARAMS_BOARD
+VTB TYPE|ATTDEF|7
+VTB TYPE|LINE|11
+VTB TYPE|MTEXT|7
+VTB TAG|AREA
+VTB TAG|COVERING
+VTB TAG|FLOOR
+VTB TAG|LAG_LENGTH
+VTB TAG|LAG_TYPE
+VTB TAG|STEP_X
+VTB TAG|STEP_Y
+=== VTB END ===
+
+Команда: 
+Команда: _.QUIT
+
+Команда: 
+**** Системные переменные не изменены ****

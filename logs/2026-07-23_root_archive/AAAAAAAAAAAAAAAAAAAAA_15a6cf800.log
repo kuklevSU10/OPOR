@@ -1,0 +1,17 @@
+[ AutoCAD - Thu Jul 23 14:59:21 2026  ]----------------------------------------
+1
+
+Command: (load "C:/Users/user/AppData/Local/Temp/opor_workspace_launcher_smoke_20260723/00_APPLOAD/01_OPOR_PORT.lsp")
+
+Command: (princ (strcat "\nWORKSPACE|VERSION=" *opor-version*))
+; error: bad argument type: stringp nil
+
+Command: (princ (strcat "\nWORKSPACE|ROOT=" *opor-root*))
+
+WORKSPACE|ROOT=C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\рабочие_прогоны\OPOR"\nWORKSPACE|ROOT=C:\\Users\\user\\Documents\\Таран\\0_0_ по работке\\плагин дмитрию\\рабочие_прогоны\\OPOR"
+
+Command: _.QUIT
+_Y
+Really want to discard all changes to drawing? <N> _Y
+
+Command: 

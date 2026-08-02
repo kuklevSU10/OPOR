@@ -1,0 +1,50 @@
+[ AutoCAD - Thu Jul 23 14:53:36 2026  ]----------------------------------------
+Выполняется регенерация модели.
+
+**** Системная переменная изменена ****
+Отслеживаемой системной переменной назначено значение, отличное от предпочтительного. Для просмотра изменений воспользуйтесь командой СИСТПЕРЕММОНИТОР.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+Команда: 
+
+Команда: 
+Команда: (setvar "LOGFILEMODE" 1)
+1
+
+Команда: (load "C:/Users/user/AppData/Local/Temp/opor_release_portable_20260723/00_APPLOAD/01_OPOR_PORT.lsp")
+
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+
+Команда: (princ (strcat "\nPORTABLE|VERSION=" *opor-version*))
+
+PORTABLE|VERSION=3.31-floor-compositions"\nPORTABLE|VERSION=3.31-floor-compositions"
+
+Команда: (princ (strcat "\nPORTABLE|ROOT=" *opor-root*))
+
+PORTABLE|ROOT=C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR"\nPORTABLE|ROOT=C:\\Users\\user\\Documents\\Таран\\0_0_ по работке\\плагин дмитрию\\OPOR"
+
+Команда: (princ (strcat "\nPORTABLE|DCL=" (if (findfile (opor-loader-path "opor.dcl")) "PASS" "FAIL")))
+
+PORTABLE|DCL=PASS"\nPORTABLE|DCL=PASS"
+
+Команда: (princ (strcat "\nPORTABLE|LIBRARY=" (if (findfile (opor-loader-path *opor-table-block-library*)) "PASS" "FAIL")))
+
+PORTABLE|LIBRARY=PASS"\nPORTABLE|LIBRARY=PASS"
+
+Команда: _.QUIT
+_Y
+Отказаться от всех изменений в чертеже? <Н> _Y
+
+Команда: 
+**** Системные переменные не изменены ****

@@ -1,0 +1,187 @@
+[ AutoCAD - Wed Jul 22 14:36:46 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORCLEAN
+
+Очистка OPOR [Session/All] <All>: 
+
+[OPOR] Удалено объектов: 119
+
+Команда: 
+Команда: OPOR
+
+[OPOR] Проверка OPOR:
+Версия: 3.29-purple-support
+Слои: OK
+Блоки MVP: OK
+Размерный стиль ISO-25: OK
+Справочно, отсутствующие будущие блоки: 
+- нетВыполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите внешний контур OPOR: 
+Команда: 
+[OPOR] Проёмов найдено: 0Выполняется регенерация модели.
+
+Команда: 
+Начальная точка сетки <Enter = угол у длинного ребра>: 0,0
+
+Направление сетки <Enter = вдоль длинного ребра>: 
+Точка вставки итоговой таблицы <Enter = справа от контура>: 
+[OPOR] Контур 1 рассчитан: опор=61, длина лаг=30 м, ошибок высот=0.
+Команда: Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Слоёв скрыто: 11
+Выберите следующий внешний контур OPOR или Enter для завершения: 
+Выполняется регенерация модели.
+
+Команда: 
+[OPOR] Заголовок чертежа: Разбивка опор Level PRO.
+[OPOR] Var завершён: опор=61, длина лаг=30 м, лаг=10 шт, ошибок высот=0, областей=4, треугольников=4.
+Команда: 
+
+Команда: 
+Команда: 
+Команда: *Прервано*
+
+Команда: OPORDUMP
+
+========== OPOR NEW OBJECT DUMP ==========
+
+===== SESSION 20260722_143702-106198937 =====
+--- ПО ТИПАМ XDATA ---
+    drawing-title : 1
+    grid-edge : 1
+    grid-v : 9
+    support : 61
+    table-extra-row : 1
+    table-params : 1
+    table-support : 1
+--- ПО СЛОЯМ ---
+    контур : 4
+    опорыvb : 61
+    сеткаvb : 10
+--- НОВАЯ СЕТКА --- линий: 10  длина: 30000 мм = 30 м
+    grid-v: 9 линий, 27 м, min 3000 мм
+    grid-p: 0 линий, 0 м, min - мм
+    session grid lag: 27 м
+    index ranges: v=(-3 11) p=(-3 8)
+    boundary lag candidate: 3 м, mode=all
+      outer: 3 м, holes: 0 м
+    П5 лаги: рядов=10, поперечных удалено=6
+    support split: vertices=5 border=24 nodes=32
+    border filter: raw=30 after-vertices=24
+    node filter: raw=54 after-self=54 after-vertices=52 after-border=32
+    крепёж: лаги= x0, плитки= x0 (шаг 0)
+    levels: marks=5 polylines=4 vertices=5 missing-marks=0 triangles=4 height-errors=0
+--- НОВЫЕ ОПОРЫ --- всего: 61
+    цвет 6 : 61 шт
+--- НОВЫЕ ТАБЛИЦЫ --- всего: 3
+    блок: OPOR_PARAMS_EXTRA_ROW
+      LABEL = Кол-во лаг, шт
+      VALUE = 10
+    блок: OPOR_PARAMS_BOARD
+      COVERING = Доска 160\U+00D727\U+00D73000
+      AREA = 15
+      LAG_TYPE = Frame 40\U+00D749 мм
+      LAG_LENGTH = 30
+      STEP_X = 600
+      STEP_Y = 600
+      FLOOR = 501
+    блок: OPOR_SUPPORT_SPEC_PRO
+      SUP_PRO_LOW12 = 0
+      SUP_PRO_LOW20 = 0
+      SUP_PRO_25_35 = 0
+      SUP_PRO_35_50 = 0
+      SUP_PRO_50_80 = 0
+      SUP_PRO_80_140 = 0
+      SUP_PRO_95_155 = 0
+      SUP_PRO_145_240 = 0
+      SUP_PRO_160_270 = 0
+      SUP_PRO_205_340 = 0
+      SUP_PRO_235_400 = 0
+      SUP_PRO_315_530 = 61
+      SUP_PRO_390_660 = 0
+      SUP_TOTAL = 61
+=========================================
+
+Команда: 
+Команда: OPORTABLES
+
+========== OPOR TOTAL TABLE BLOCKS ==========
+--- TABLE #1 ---
+    block: OPOR_SUPPORT_SPEC_PRO
+    handle: 36B1B
+    layer: контур
+    session: 20260722_143702-106198937
+      SUP_PRO_LOW12 = 0
+      SUP_PRO_LOW20 = 0
+      SUP_PRO_25_35 = 0
+      SUP_PRO_35_50 = 0
+      SUP_PRO_50_80 = 0
+      SUP_PRO_80_140 = 0
+      SUP_PRO_95_155 = 0
+      SUP_PRO_145_240 = 0
+      SUP_PRO_160_270 = 0
+      SUP_PRO_205_340 = 0
+      SUP_PRO_235_400 = 0
+      SUP_PRO_315_530 = 61
+      SUP_PRO_390_660 = 0
+      SUP_TOTAL = 61
+--- TABLE #2 ---
+    block: OPOR_PARAMS_BOARD
+    handle: 36B2B
+    layer: контур
+    session: 20260722_143702-106198937
+      COVERING = Доска 160\U+00D727\U+00D73000
+      AREA = 15
+      LAG_TYPE = Frame 40\U+00D749 мм
+      LAG_LENGTH = 30
+      STEP_X = 600
+      STEP_Y = 600
+      FLOOR = 501
+--- TABLE #3 ---
+    block: OPOR_PARAMS_EXTRA_ROW
+    handle: 36B34
+    layer: контур
+    session: 20260722_143702-106198937
+      LABEL = Кол-во лаг, шт
+      VALUE = 10
+============================================
+
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

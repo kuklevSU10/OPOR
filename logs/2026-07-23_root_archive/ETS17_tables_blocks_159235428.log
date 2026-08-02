@@ -1,0 +1,31 @@
+[ AutoCAD - Tue Jul 21 16:27:13 2026  ]----------------------------------------
+Выполняется регенерация модели.
+
+**** Системная переменная изменена ****
+Отслеживаемой системной переменной назначено значение, отличное от предпочтительного. Для просмотра изменений воспользуйтесь командой СИСТПЕРЕММОНИТОР.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+Команда: 
+
+Команда: 
+Команда: (load (strcat (getvar "DWGPREFIX") "build_table_blocks.lsp"))
+
+BUILDOPORBLOCKS loaded
+
+Команда: BUILDOPORBLOCKS
+
+=== OTB BUILD BEGIN ===
+OTB MADE=OPOR_SUPPORT_SPEC_3D entities=80 attrs=11
+OTB MADE=OPOR_PARAMS_TILE entities=16 attrs=4
+OTB MADE=OPOR_PARAMS_BOARD entities=25 attrs=7
+=== OTB BUILD END ===
+
+Команда: 
+Команда: _.QSAVE
+
+Команда: _.QUIT
+
+Команда: 
+**** Системные переменные не изменены ****

@@ -1,0 +1,33 @@
+[ AutoCAD - Tue Jul 21 16:37:29 2026  ]----------------------------------------
+Выполняется регенерация модели.
+
+Загружаются DLL-файлы для работы с моделями.
+
+**** Системная переменная изменена ****
+Отслеживаемой системной переменной назначено значение, отличное от предпочтительного. Для просмотра изменений воспользуйтесь командой СИСТПЕРЕММОНИТОР.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+Команда: 
+
+Команда: 
+Команда: (load (strcat (getvar "DWGPREFIX") "opor-loader.lsp"))
+
+[OPOR] Загружено. Команды: OPOR, XX, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+
+Команда: (load (strcat (getvar "DWGPREFIX") "ets17_smoke.lsp"))
+
+ETS17SMOKE loaded
+
+Команда: ETS17SMOKE
+
+=== ETS17 SMOKE BEGIN ===; ошибка: неверный тип аргумента: VLA-OBJECT nil
+
+Команда: 
+Команда: _.QSAVE
+
+Команда: _.QUIT
+
+Команда: 
+**** Системные переменные не изменены ****

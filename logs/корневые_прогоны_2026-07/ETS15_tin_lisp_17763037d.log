@@ -1,0 +1,244 @@
+[ AutoCAD - Tue Jul 28 16:00:39 2026  ]----------------------------------------
+
+Открывается файл формата AutoCAD 2018.
+Выполняется регенерация модели.
+
+
+Утилиты меню AutoCAD загружены.
+Команда: 
+
+Файл Autodesk DWG. Это файл формата TrustedDWG, сохраненный в приложении Autodesk или в приложении, лицензированном корпорацией Autodesk.
+
+Команда: 
+
+Команда: 
+Команда: _Options 
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] LOADED | VERSION=3.31-floor-compositions | ROOT=C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech) | APPAUTOLOAD=14
+[OPOR] Загружено. Команды: OPOR, XX, OPORLOGS, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORSLOPELEVELS, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORCLEAN
+
+[OPOR] START | OPOR-COMMAND-CLEAN | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+Очистка OPOR [Session/All] <All>: 
+
+[OPOR] Удалено объектов: 76
+[OPOR] DONE | OPOR-COMMAND-CLEAN
+
+Команда: 
+Команда: OPORTIN
+
+[OPOR] START | OPOR-COMMAND-TIN | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+[OPOR] ERROR | OPOR-COMMAND-TIN | no function definition: OPOR-TIN-RUNnil
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] LOADED | VERSION=3.31-floor-compositions | ROOT=C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech) | APPAUTOLOAD=14
+[OPOR] Загружено. Команды: OPOR, XX, OPORLOGS, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORSLOPELEVELS, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORTIN
+
+[OPOR] START | OPOR-COMMAND-TIN | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+Выберите внешний контур OPOR: 
+Команда: 
+[OPOR] Проёмов найдено: 0
+[OPOR] ALERT | TIN не построен: не удалось создать блоки уклонов.
+Ошибок вставки: 4.
+Команда: 
+[OPOR] DONE | OPOR-COMMAND-TINnil
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] LOADED | VERSION=3.31-floor-compositions | ROOT=C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech) | APPAUTOLOAD=14
+[OPOR] Загружено. Команды: OPOR, XX, OPORLOGS, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORSLOPELEVELS, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORCLEAN
+
+[OPOR] START | OPOR-COMMAND-CLEAN | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+Очистка OPOR [Session/All] <All>: 
+
+[OPOR] Удалено объектов: 0
+[OPOR] DONE | OPOR-COMMAND-CLEAN
+
+Команда: 
+Команда: OPORTIN
+
+[OPOR] START | OPOR-COMMAND-TIN | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+Выберите внешний контур OPOR: 
+Команда: 
+[OPOR] Проёмов найдено: 0
+[OPOR] TIN slope: не удалось задать динамическое свойство Угол.
+[OPOR] TIN slope: не удалось задать динамическое свойство Угол.
+[OPOR] TIN slope: не удалось задать динамическое свойство Угол.
+[OPOR] TIN slope: не удалось задать динамическое свойство Угол.
+[OPOR] ALERT | TIN не построен: не удалось создать блоки уклонов.
+Ошибок вставки: 4.
+Команда: 
+[OPOR] DONE | OPOR-COMMAND-TINnil
+
+Команда: 
+Команда: _APPLOAD
+01_OPOR_PORT.lsp успешно загружено.
+
+
+Команда: 
+[OPOR] LOADED | VERSION=3.31-floor-compositions | ROOT=C:\Users\user\Documents\Таран\0_0_ по работке\плагин дмитрию\OPOR | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech) | APPAUTOLOAD=14
+[OPOR] Загружено. Команды: OPOR, XX, OPORLOGS, OPORTIN, OPORSLOPE, OPORSLOPEWR, OPORSLOPELEVELS, OPORHEIGHTCHECK, OPORWRITELEVEL, OPORAUTOLEVEL, OPORRING, OPORREGCHECK, OPORCHECK, OPORCLEAN, OPORDUMP, OPORTABLES, OPOROLD, OPORSHOW, OPORDEBUG.
+check_dump.lsp загружен. Главная команда: DUMPALL
+probe_height_check загружен. Команда: HEIGHTDUMP.
+probe_write_level загружен. Команда: WRITELEVELDUMP.
+probe_auto_level загружен. Команда: AUTOLEVELDUMP.
+probe_slope загружен. Команды: SLOPEDUMP, SLOPECOLORS.
+probe_tables загружен. Команда: TBLPROBE
+probe_marks v2 загружен. Команда: MARKDUMP
+probe_lines.lsp загружен. Команда: LINEDUMP
+OPOR port загружен. Основная команда: OPOR (или XX).
+Команда: 
+Команда: OPORCLEAN
+
+[OPOR] START | OPOR-COMMAND-CLEAN | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+Очистка OPOR [Session/All] <All>: 
+
+[OPOR] Удалено объектов: 0
+[OPOR] DONE | OPOR-COMMAND-CLEAN
+
+Команда: 
+Команда: OPORTIN
+
+[OPOR] START | OPOR-COMMAND-TIN | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+Выберите внешний контур OPOR: 
+Команда: 
+[OPOR] Проёмов найдено: 0
+[OPOR] TIN завершён: исходных отметок=5, рассчитано для проёмов=0, отметок всего=5, треугольников=4, уклонов=4, вне области=0, рёбер=4, flips=0, заменено треугольников=0, заменено уклонов=0, заменено автоотметок=0.
+[OPOR] ALERT | TIN построен.
+Исходных отметок: 5
+Рассчитано для проёмов: 0
+Треугольников: 4
+Блоков уклона: 4
+Команда: 
+[OPOR] DONE | OPOR-COMMAND-TINT
+
+Команда: 
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: 
+Автоматическое сохранение в C:\Users\user\AppData\Local\Temp\ETS15_tin_lisp_1_28411_57506c2d.sv$ ...
+
+Команда: 
+Команда: 
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: Задайте противоположный угол или [Линия/РМн-угол/СМн-угол]: 
+Команда: 
+Команда: 
+Команда: _cutclip найдено: 4
+
+Команда: OPORSLOPELEVELS
+
+[OPOR] START | OPOR-COMMAND-SLOPE-LEVELS | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+Укажите внешний контур: 
+Команда: 
+Укажите одну известную базовую отметку: 
+[OPOR] Slope levels завершён: областей=4, отметок=5, добавлено=4, обновлено=1, ошибок записи=0.
+[OPOR] ALERT | Высотные отметки рассчитаны.
+Областей: 4
+Добавлено отметок: 4
+Обновлено отметок: 1
+Команда: 
+[OPOR] DONE | OPOR-COMMAND-SLOPE-LEVELST
+
+Команда: 
+Команда: 
+Команда: *Прервано*
+
+Команда: 
+Команда: 
+Команда: 
+Команда: 
+Команда: 
+Команда: _cutclip найдено: 3
+
+Команда: 
+Команда: 
+Команда: 
+Команда: _copy найдено: 1
+
+Текущая настройка:  Режим копирования  = Несколько
+Базовая точка или [Смещение/реЖим] <Смещение>: 
+Вторая точка или [Массив] <использовать для смещения первую точку>: 
+Укажите вторую точку или [Массив/Выход/Отменить] <Выход>: 
+Укажите вторую точку или [Массив/Выход/Отменить] <Выход>: 
+Укажите вторую точку или [Массив/Выход/Отменить] <Выход>: *Прервано*
+
+Команда: OPORSLOPELEVELS
+
+[OPOR] START | OPOR-COMMAND-SLOPE-LEVELS | DWG=ETS15_tin_lisp.dwg | ACADVER=24.2s (LMS Tech)
+Укажите внешний контур: 
+Команда: 
+Укажите одну известную базовую отметку: 
+[OPOR] Slope levels завершён: областей=4, отметок=5, добавлено=0, обновлено=5, ошибок записи=0.
+[OPOR] ALERT | Высотные отметки рассчитаны.
+Областей: 4
+Добавлено отметок: 0
+Обновлено отметок: 5
+Команда: 
+[OPOR] DONE | OPOR-COMMAND-SLOPE-LEVELST
+
+Команда: 
+Команда: *Прервано*
+
+Команда: *Прервано*
+
+Команда:  
+Команда: 

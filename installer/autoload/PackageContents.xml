@@ -10,7 +10,7 @@
   Name="OPOR"
   Description="Level 3D and Level PRO support layout for AutoCAD"
   Author="sayan group">
-  <CompanyDetails Name="sayan group" Email="project@sayangroup.ru" />
+  <CompanyDetails Name="sayan group" Email="https://t.me/loxopuzik" />
   <RuntimeRequirements OS="Win64" Platform="AutoCAD|AutoCAD*" />
   <Components Description="OPOR AutoLISP components">
     <RuntimeRequirements
@@ -28,11 +28,23 @@
         <Command Local="OPOR" Global="OPOR" />
         <Command Local="XX" Global="XX" />
         <Command Local="OPORLOGS" Global="OPORLOGS" />
-        <Command Local="OPORTIN" Global="OPORTIN" />
-        <Command Local="OPORGEOLEVELS" Global="OPORGEOLEVELS" />
-        <Command Local="OPORSLOPELEVELS" Global="OPORSLOPELEVELS" />
+        <Command Local="OPORSLOPE" Global="OPORSLOPE" />
+        <Command Local="OPORSLOPEWR" Global="OPORSLOPEWR" />
+        <Command Local="OPORHEIGHTCHECK" Global="OPORHEIGHTCHECK" />
+        <Command Local="OPORWRITELEVEL" Global="OPORWRITELEVEL" />
         <Command Local="OPORAUTOLEVEL" Global="OPORAUTOLEVEL" />
+        <Command Local="OPORSLOPELEVELS" Global="OPORSLOPELEVELS" />
+        <Command Local="OPORGEOLEVELS" Global="OPORGEOLEVELS" />
+        <Command Local="OPORRING" Global="OPORRING" />
+        <Command Local="OPORTIN" Global="OPORTIN" />
+        <Command Local="OPORREGCHECK" Global="OPORREGCHECK" />
+        <Command Local="OPORCHECK" Global="OPORCHECK" />
         <Command Local="OPORCLEAN" Global="OPORCLEAN" />
+        <Command Local="OPORDUMP" Global="OPORDUMP" />
+        <Command Local="OPORTABLES" Global="OPORTABLES" />
+        <Command Local="OPOROLD" Global="OPOROLD" />
+        <Command Local="OPORSHOW" Global="OPORSHOW" />
+        <Command Local="OPORDEBUG" Global="OPORDEBUG" />
       </Commands>
     </ComponentEntry>
   </Components>

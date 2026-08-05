@@ -31,7 +31,7 @@ opor_mode : dialog {
   spacer;
   : button { key = "cancel"; label = "Отмена"; is_cancel = true; fixed_width = true; alignment = centered; }
   spacer;
-  : text { label = "project@sayangroup.ru      тел. +7 495 136 6050"; alignment = centered; }
+  : text { label = "Telegram:  @loxopuzik  @Tender_Monster"; alignment = centered; }
 }
 
 opor_mode_help : dialog {

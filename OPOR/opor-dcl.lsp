@@ -59,16 +59,10 @@
         nil))
     nil))
 
-;; Сайт заказчика: логотип в панели сделан кликабельным (image_button),
-;; по клику открывается в браузере по умолчанию. startapp с explorer —
-;; самый надёжный способ открыть URL из AutoLISP: команда BROWSER есть
-;; не во всех сборках AutoCAD.
-(setq *opor-site-url* "https://sayangroup.ru/")
-
-(defun opor-open-site ()
-  (vl-catch-all-apply 'startapp (list "explorer" *opor-site-url*))
-  (princ))
-
+;; Логотип показан обычным тайлом image, а не image_button: кнопке DCL
+;; рисует рамку, отключить её нечем, а прозрачную кнопку поверх картинки
+;; не положить — тайлы в DCL не перекрываются. Поэтому логотип
+;; некликабельный: вид важнее ссылки.
 ;; Логотип заказчика в главной панели.
 ;; DCL не умеет растровые картинки, но умеет заливать прямоугольники,
 ;; поэтому знак разложен на 235 прямоугольников из векторного logo.svg
@@ -160,8 +154,6 @@
         ;; Размеры тайла известны только у уже созданного диалога,
         ;; поэтому знак рисуем после new_dialog и до start_dialog.
         (vl-catch-all-apply 'opor-dcl-draw-logo)
-        ;; Клик по логотипу открывает сайт и НЕ закрывает панель.
-        (action_tile "logo" "(opor-open-site)")
         ;; VBA-форма: h = write_levl, +0.000 = auto_levl, ? = check_height.
         (action_tile "const" "(done_dialog 2)")
         (action_tile "var"   "(done_dialog 3)")

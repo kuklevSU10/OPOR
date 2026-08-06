@@ -28,7 +28,7 @@ opor_mode : dialog {
     spacer;
   }
   spacer;
-  : image_button { key = "logo"; width = 30; height = 5; color = -15; alignment = centered; }
+  : image { key = "logo"; width = 30; height = 5; color = -15; alignment = centered; }
   : button { key = "cancel"; label = "Отмена"; is_cancel = true; fixed_width = true; alignment = centered; }
   spacer;
 }

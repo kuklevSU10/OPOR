@@ -49,6 +49,8 @@
   (if id
     (if (new_dialog "opor_mode_help" id)
       (progn
+        (vl-catch-all-apply 'set_tile
+          (list "helpver" (strcat "Версия " *opor-version*)))
         (action_tile "accept" "(done_dialog 1)")
         (setq result (start_dialog))
         (unload_dialog id)
@@ -129,8 +131,16 @@
     (progn
       (start_image "logo")
       (fill_image 0 0 w h -15)
+      ;; Размер тайла в пикселях зависит от сборки AutoCAD и шрифта диалогов.
+      ;; Пишем его в лог: по нему растр логотипа пересобирается точно под тайл.
+      (opor-log (strcat "DCL: тайл логотипа " (itoa w) "x" (itoa h) " px"))
       (setq s (min (/ (float w) *opor-logo-ref-width*)
                    (/ (float h) *opor-logo-ref-height*)))
+      ;; При увеличении берём только ЦЕЛЫЙ коэффициент: дробный растягивает
+      ;; однобитный растр неравномерно (часть линий 1 px, часть 2 px) —
+      ;; именно от этого знак выглядел кривым. Если тайл меньше растра,
+      ;; оставляем дробный масштаб: лучше слегка неровно, чем обрезать.
+      (if (>= s 1.0) (setq s (float (fix s))))
       (setq ox (/ (- w (* *opor-logo-ref-width* s)) 2.0)
             oy (/ (- h (* *opor-logo-ref-height* s)) 2.0))
       (foreach r *opor-logo-rects*
@@ -150,7 +160,9 @@
     (if (not (new_dialog "opor_mode" id))
       (progn (unload_dialog id) nil)
       (progn
-        (set_tile "ver" (strcat "Ver " *opor-version*))
+        ;; Версии в главной панели больше нет — она переехала в справку («i»),
+        ;; чтобы не спорить с логотипом наверху. Для поддержки версия
+        ;; по-прежнему пишется в лог при каждой загрузке.
         ;; Размеры тайла известны только у уже созданного диалога,
         ;; поэтому знак рисуем после new_dialog и до start_dialog.
         (vl-catch-all-apply 'opor-dcl-draw-logo)

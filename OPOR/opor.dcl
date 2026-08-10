@@ -2,9 +2,8 @@
 
 opor_mode : dialog {
   label = "OPOR";
-  : row {
-    : text { key = "ver"; label = "Ver"; width = 24; }
-  }
+  : image { key = "logo"; width = 30; height = 5; color = -15; alignment = centered; }
+  spacer;
   : row {
     : button { key = "const";   label = "A";       width = 12; }
     : button { key = "var";     label = "B";       width = 12; }
@@ -28,9 +27,9 @@ opor_mode : dialog {
     spacer;
   }
   spacer;
-  : image { key = "logo"; width = 30; height = 5; color = -15; alignment = centered; }
   : button { key = "cancel"; label = "ќтмена"; is_cancel = true; fixed_width = true; alignment = centered; }
   spacer;
+  : text { label = "project@sayangroup.ru      тел. +7 495 136 6050"; alignment = centered; }
 }
 
 opor_mode_help : dialog {
@@ -52,6 +51,7 @@ opor_mode_help : dialog {
     : text { label = "TIN Ч построить области высот по отметкам"; }
     : text { label = "√ео Ч отметки по геоподоснове со сло€ GEO_POINTS"; }
   }
+  : text { key = "helpver"; label = ""; alignment = centered; }
   ok_only;
 }
 

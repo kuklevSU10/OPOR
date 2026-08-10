@@ -14,3 +14,7 @@
 *.docx binary
 *.xlsx binary
 *.pdf  binary
+
+# Текст для мастера установщика (Inno) должен остаться CRLF,
+# иначе Git тихо приводит его к LF при коммите.
+installer/inno/after_install.txt  text eol=crlf

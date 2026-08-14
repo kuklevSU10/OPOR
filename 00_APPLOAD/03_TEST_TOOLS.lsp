@@ -1,6 +1,21 @@
 (vl-load-com)
 
-(defun opor-appload-project-root (/ source launcher-dir loader selected)
+(defun opor-appload-remembered-project-root (/ value)
+  (setq value
+    (vl-catch-all-apply
+      'vl-registry-read
+      (list "HKEY_CURRENT_USER\\Software\\OPOR" "Root")))
+  (if (and (not (vl-catch-all-error-p value)) (= (type value) 'STR))
+    (progn
+      (setq value (vl-string-right-trim "\\/" value))
+      (cond
+        ((findfile (strcat value "\\opor-loader.lsp"))
+          (vl-filename-directory value))
+        ((findfile (strcat value "\\OPOR\\opor-loader.lsp")) value)
+        (T nil)))
+    nil))
+
+(defun opor-appload-project-root (/ source launcher-dir remembered loader selected)
   (setq source
     (cond
       ((and (boundp '*load-truename*) *load-truename*) *load-truename*)
@@ -11,6 +26,7 @@
           *opor-appload-root*
           (findfile (strcat *opor-appload-root* "\\OPOR\\opor-loader.lsp")))
       *opor-appload-root*)
+    ((setq remembered (opor-appload-remembered-project-root)) remembered)
     (source
       (setq launcher-dir (vl-filename-directory source))
       (vl-filename-directory launcher-dir))
@@ -48,6 +64,7 @@
     "tools\\generators\\make_multicontour_var_etalons.lsp"
     "tools\\generators\\make_tin_etalons.lsp"
     "tools\\generators\\make_tin_robust_etalons.lsp"
+    "tools\\generators\\make_tin_curved_etalons.lsp"
     "tools\\diagnostics\\check_dump.lsp"
     "tools\\diagnostics\\probe_height_check.lsp"
     "tools\\diagnostics\\probe_write_level.lsp"
@@ -61,5 +78,5 @@
       "tools\\diagnostics\\probe_tin.lsp")
     (opor-appload-load relative)))
 
-(princ "\nТестовые инструменты загружены: ETS1/ETS2/ETS3/ETS7/ETS8/ETS9/ETS10/ETS11/ETS12/ETS13/ETS14/ETS15/ETS16 и диагностика.")
+(princ "\nТестовые инструменты загружены: ETS1/ETS2/ETS3/ETS7/ETS8/ETS9/ETS10/ETS11/ETS12/ETS13/ETS14/ETS15/ETS16/ETS17/ETS18/ETS23 и диагностика.")
 (princ)

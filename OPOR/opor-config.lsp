@@ -1,6 +1,6 @@
 ;;; OPOR clean AutoLISP port - configuration
 
-(setq *opor-version* "3.32-geo-levels") ; геоотметки со слоя GEO_POINTS кнопкой «Гео» на панели
+(setq *opor-version* "3.35-customer-polish") ; таблицы, draw order опор, PRO-only Slope, целые уклоны
 (setq *opor-xdata-app* "OPOR")
 
 (setq *opor-layer-contour* "контур")
@@ -11,6 +11,7 @@
 (setq *opor-layer-holes* "областиvb")
 (setq *opor-layer-level-lines* "линии_высот")
 (setq *opor-layer-temp* "templayvb")
+(setq *opor-layer-tables* "0")
 (setq *opor-level-block-name* "otmetka_oporvb")
 (setq *opor-geo-source-layer* "GEO_POINTS")
 (setq *opor-geo-meter-drawing-threshold* 1000.0)
@@ -65,8 +66,10 @@
 (setq *opor-dimstyle-text-gap* 0.625)
 (setq *opor-dimstyle-jog-height-factor* 1.5)
 (setq *opor-dimstyle-text-alignment* 0) ; DIMTALN: according to ISO
-(setq *opor-new-3d-params-offset-y* -10000.0)
-(setq *opor-new-pro-params-offset-y* -13700.0)
+;; В актуальной библиотеке база спецификации находится на её нижней границе:
+;; спецификация растёт вверх, а динамические строки параметров — вниз от той же точки.
+(setq *opor-new-3d-params-offset-y* 0.0)
+(setq *opor-new-pro-params-offset-y* 0.0)
 (setq *opor-new-3d-support-tags*
   (list
     "SUP_3D_35_50"
@@ -143,6 +146,9 @@
     (cons 'support-index 1)))
 
 (setq *opor-point-tolerance* 0.001)
+(setq *opor-curve-chord-tolerance* 2.0)         ; макс. стрела хорды при разбиении дуг для TIN/Var, мм
+(setq *opor-curve-max-pieces-per-segment* 720) ; защита от чрезмерной детализации одной дуги
+(setq *opor-tin-retry-constraint-length* 4000.0) ; шаг техточек retry для невосстановленного длинного ребра, мм
 (setq *opor-vba-vertex-border-tolerance* 20.0)   ; b2_mains: dst < 20
 (setq *opor-vba-point-dedupe-tolerance* 0.01)    ; equalpointsDel/equalpointsDel2: < 0.01
 (setq *opor-vba-node-self-dedupe-tolerance* 0.01)
@@ -151,6 +157,7 @@
 (setq *opor-vba-mark-match-tolerance* 1.0)       ; chk_blk_contr/getH_vertecs: |dx|<1 и |dy|<1
 (setq *opor-vba-border-line-tolerance* 10.0)     ; getH_bords: lindist < 10
 (setq *opor-support-dedupe-tolerance* 1.0)       ; схлопнуть повторные опоры в одной физической точке
+(setq *opor-support-max-overlap* 80.0)           ; если круги опор перекрываются больше, одну опору удаляем
 (setq *opor-vba-dbl-lag-dedupe-tolerance* 10.0)  ; trimXL: maxDst = 10 (дедуп доп. лаг)
 (setq *opor-dbl-lag-color* 12)                   ; copyxlinlag: newxl.color = 12
 (setq *opor-vba-tile-outside-area-tolerance* 0.001) ; trimplitk: cregarea < 0.001 - плитка снаружи

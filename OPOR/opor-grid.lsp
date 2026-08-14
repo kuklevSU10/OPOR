@@ -5,8 +5,7 @@
   (setq b (opor-v+ center (opor-v* axis half-length)))
   (setq line (vla-AddLine (opor-ms) (vlax-3d-point a) (vlax-3d-point b)))
   (vla-put-Layer line layer)
-  (opor-register-created line object-type)
-  line)
+  (opor-register-created line object-type))
 
 (defun opor-grid-build-family-range (base axis offset-axis step axis-center half-length idx-min idx-max layer object-type / idx offset center lines)
   (setq lines '())
@@ -121,28 +120,24 @@
   (car lst))
 
 (defun opor-polyline-bulge (pline idx / value)
-  (setq value (vl-catch-all-apply 'vla-GetBulge (list pline idx)))
-  (if (vl-catch-all-error-p value) 0.0 value))
+  (opor-polyline-segment-bulge pline idx))
 
-(defun opor-polyline-line-edge-pairs (pline / pts result idx a b first tail-point)
-  (setq pts (opor-polyline-points pline))
+(defun opor-polyline-line-edge-pairs (pline / result start end idx a b)
   (setq result '())
-  (setq idx 0)
-  (while (cdr pts)
+  (setq start (fix (vlax-curve-getStartParam pline)))
+  (setq end (fix (vlax-curve-getEndParam pline)))
+  (setq idx start)
+  ;; У замкнутой полилинии endParam уже включает последний сегмент к первой
+  ;; вершине. Повторно «замыкать» список нельзя: после пропущенной bulge-дуги
+  ;; это создавало бы ложную лагу-хорду.
+  (while (< idx end)
+    (setq a (vlax-curve-getPointAtParam pline idx))
+    (setq b (vlax-curve-getPointAtParam pline (1+ idx)))
     (if (equal (opor-polyline-bulge pline idx) 0.0 1e-9)
-      (setq result (cons (list (opor-2d (car pts)) (opor-2d (cadr pts))) result)))
-    (setq pts (cdr pts))
+      (setq result
+        (cons (list (opor-2d a) (opor-2d b)) result)))
     (setq idx (1+ idx)))
-  (setq result (reverse result))
-  (if (and (opor-polyline-closed-p pline) result)
-    (progn
-      (setq first (caar result))
-      (setq tail-point (cadr (opor-list-tail result)))
-      (if (and
-            (> (distance first tail-point) 1e-7)
-            (equal (opor-polyline-bulge pline idx) 0.0 1e-9))
-        (setq result (append result (list (list tail-point first)))))))
-  result)
+  (reverse result))
 
 ;; b2_mains: рёбра контура/проёмов без фильтра длины — угол (параллельность
 ;; лагам) + дедуп против сетки; выжившие ФИЗИЧЕСКИ переносятся на сеткаvb

@@ -35,10 +35,17 @@
 
 (defun opor-register-created (obj object-type)
   (if obj
-    (progn
-      (opor-mark-object obj object-type)
-      (opor-session-push 'created-objects obj)))
-  obj)
+    (if (opor-mark-object obj object-type)
+      (progn
+        (opor-session-push 'created-objects obj)
+        obj)
+      (progn
+        (opor-log
+          (strcat "Объект " (opor-string object-type)
+            " удалён: не удалось пометить его XData OPOR."))
+        (opor-delete-object obj)
+        nil))
+    nil))
 
 (defun opor-unregister-created (obj / objects)
   (setq objects (opor-session-get 'created-objects))
@@ -233,6 +240,7 @@
 
 (defun opor-check-environment (create-layers / missing-layers missing-known missing-mvp dimstyle-ok msg)
   (vl-load-com)
+  (opor-import-support-blocks)
   (opor-import-new-table-blocks)
   (setq dimstyle-ok (opor-ensure-dimstyle))
   (setq missing-layers (opor-missing-layers))
@@ -335,7 +343,6 @@
 
 (defun opor-multi-init ()
   (opor-session-set 'contour-count 0)
-  (opor-session-set 'drawing-title-bbox nil)
   (opor-session-set 'total-area 0.0)
   (opor-session-set 'total-area-gross 0.0)
   (opor-session-set 'total-perimeter-mm 0.0)
@@ -344,6 +351,7 @@
   (opor-session-set 'total-support-count 0)
   (opor-session-set 'total-support-counts '())
   (opor-session-set 'total-support-height-errors 0)
+  (opor-session-set 'total-support-insert-errors 0)
   (opor-session-set 'total-tile-whole-count 0)
   (opor-session-set 'total-tile-trimmed-count 0)
   (opor-session-set 'total-board-whole-count 0)
@@ -369,6 +377,8 @@
   (opor-session-set 'total-support-after-self-node-count 0)
   (opor-session-set 'total-support-after-vertex-node-count 0)
   (opor-session-set 'total-support-node-count 0)
+  (opor-session-set 'total-support-overlap-deduped 0)
+  (opor-session-set 'total-support-excluded-curve-vertex-count 0)
   (opor-session-set 'total-level-mark-count 0)
   (opor-session-set 'total-level-vertex-count 0)
   (opor-session-set 'total-level-missing-mark-count 0)
@@ -378,7 +388,7 @@
 (defun opor-multi-reset-current (/ key)
   (foreach key
     '(lag-length-mm lag-length-m lag-row-count support-count
-      support-height-errors tile-whole-count tile-trimmed-count
+      support-height-errors support-insert-errors tile-whole-count tile-trimmed-count
       board-whole-count board-trimmed-count
       lag-fastener-count tile-fastener-count level-polyline-count
       level-triangle-count grid-lag-length-mm boundary-outer-lag-length-mm
@@ -387,7 +397,8 @@
       dbl-lag-pair-segments dbl-lag-stagger-support-count support-vertex-count
       support-raw-border-count support-border-count support-raw-node-count
       support-after-self-node-count support-after-vertex-node-count
-      support-node-count level-mark-count level-vertex-count
+      support-node-count support-overlap-deduped support-excluded-curve-vertex-count
+      level-mark-count level-vertex-count
       level-missing-mark-count level-missing-contour-count)
     (opor-session-set key 0))
   (opor-session-set 'support-counts '())
@@ -422,6 +433,7 @@
       (opor-session-get 'support-counts)))
   (foreach pair
     '((total-support-height-errors . support-height-errors)
+      (total-support-insert-errors . support-insert-errors)
       (total-tile-whole-count . tile-whole-count)
       (total-tile-trimmed-count . tile-trimmed-count)
       (total-board-whole-count . board-whole-count)
@@ -447,6 +459,8 @@
       (total-support-after-self-node-count . support-after-self-node-count)
       (total-support-after-vertex-node-count . support-after-vertex-node-count)
       (total-support-node-count . support-node-count)
+      (total-support-overlap-deduped . support-overlap-deduped)
+      (total-support-excluded-curve-vertex-count . support-excluded-curve-vertex-count)
       (total-level-mark-count . level-mark-count)
       (total-level-vertex-count . level-vertex-count)
       (total-level-missing-mark-count . level-missing-mark-count)
@@ -468,6 +482,7 @@
   (opor-session-set 'support-count (opor-session-get 'total-support-count))
   (opor-session-set 'support-counts (opor-session-get 'total-support-counts))
   (opor-session-set 'support-height-errors (opor-session-get 'total-support-height-errors))
+  (opor-session-set 'support-insert-errors (opor-session-get 'total-support-insert-errors))
   (opor-session-set 'tile-whole-count (opor-session-get 'total-tile-whole-count))
   (opor-session-set 'tile-trimmed-count (opor-session-get 'total-tile-trimmed-count))
   (opor-session-set 'board-whole-count (opor-session-get 'total-board-whole-count))
@@ -493,6 +508,10 @@
   (opor-session-set 'support-after-self-node-count (opor-session-get 'total-support-after-self-node-count))
   (opor-session-set 'support-after-vertex-node-count (opor-session-get 'total-support-after-vertex-node-count))
   (opor-session-set 'support-node-count (opor-session-get 'total-support-node-count))
+  (opor-session-set 'support-overlap-deduped
+    (opor-session-get 'total-support-overlap-deduped))
+  (opor-session-set 'support-excluded-curve-vertex-count
+    (opor-session-get 'total-support-excluded-curve-vertex-count))
   (opor-session-set 'level-mark-count (opor-session-get 'total-level-mark-count))
   (opor-session-set 'level-vertex-count (opor-session-get 'total-level-vertex-count))
   (opor-session-set 'level-missing-mark-count (opor-session-get 'total-level-missing-mark-count))
@@ -516,9 +535,17 @@
         (strcat ", ошибок высот="
           (itoa (opor-number-or-zero (opor-session-get 'support-height-errors))))
         "")
+      (if (> (opor-number-or-zero (opor-session-get 'support-insert-errors)) 0)
+        (strcat ", ошибок вставки опор="
+          (itoa (opor-number-or-zero (opor-session-get 'support-insert-errors))))
+        "")
+      (if (> (opor-number-or-zero (opor-session-get 'support-overlap-deduped)) 0)
+        (strcat ", удалено перекрывающихся="
+          (itoa (opor-number-or-zero (opor-session-get 'support-overlap-deduped))))
+        "")
       ".")))
 
-(defun opor-run-const-height (/ boundary holes grid supports table done first-p)
+(defun opor-run-const-height (/ boundary holes grid supports table done first-p insert-errors)
   (if (not (opor-environment-ready-for-mvp-p))
     nil
     (progn
@@ -538,7 +565,7 @@
             (setq holes (opor-detect-holes boundary))
             (if (not (opor-hole-regions-valid-p holes))
               (progn
-                (opor-log "Const остановлен: самопересечение проёма.")
+                (opor-log "Const остановлен: некорректная геометрия проёмов.")
                 (opor-layers-restore)
                 (setq done T))
               (progn
@@ -559,7 +586,6 @@
                         (setq supports (opor-supports-place *opor-session*))
                         (opor-fasteners-count)
                         (opor-multi-accumulate)
-                        (opor-drawing-title-accumulate boundary)
                         (opor-multi-log-contour "const-height"))
                       (setq done T)))
                   (setq done T)))))))
@@ -567,28 +593,42 @@
       (if (> (opor-session-get 'contour-count) 0)
         (progn
           (opor-multi-apply-totals)
+          (setq insert-errors (opor-session-get 'support-insert-errors))
           (setq table (opor-insert-total-table *opor-session*))
-          (opor-insert-drawing-title *opor-session*)
-          (opor-log
-            (strcat
-              "MVP завершён: опор="
-              (itoa (opor-session-get 'support-count))
-              ", длина лаг="
-              (itoa (opor-session-get 'lag-length-m))
-              " м"
-              (opor-lag-count-log-text)
-              (if (> (opor-session-get 'contour-count) 1)
-                (strcat ", контуров=" (itoa (opor-session-get 'contour-count)))
-                "")
-              (opor-tiles-log-text)
-              (opor-dbl-lag-log-text)
-              (opor-fasteners-log-text)
-              "."))
-          (opor-view-restore)
-          T)
+          (if table
+            (progn
+              (if (> insert-errors 0)
+                (opor-alert
+                  (strcat
+                    "Не удалось вставить опоры: " (itoa insert-errors) ".\n"
+                    "Итоговая таблица содержит только реально созданные опоры.")))
+              (opor-log
+                (strcat
+                  "MVP завершён: опор="
+                  (itoa (opor-session-get 'support-count))
+                  ", длина лаг="
+                  (itoa (opor-session-get 'lag-length-m))
+                  " м"
+                  (opor-lag-count-log-text)
+                  (if (> (opor-session-get 'contour-count) 1)
+                    (strcat ", контуров=" (itoa (opor-session-get 'contour-count)))
+                    "")
+                  (opor-tiles-log-text)
+                  (opor-dbl-lag-log-text)
+                  (opor-fasteners-log-text)
+                  ", ошибок вставки опор=" (itoa insert-errors)
+                  "."))
+              (opor-view-restore)
+              (= insert-errors 0))
+            (progn
+              (opor-alert
+                "Расчёт выполнен, но итоговая таблица не вставлена. Команда завершена с ошибкой.")
+              (opor-log "MVP не завершён: итоговая таблица не вставлена.")
+              (opor-view-restore)
+              nil)))
         (progn (opor-view-restore) nil)))))
 
-(defun opor-run-var-height (/ boundary holes grid supports table errors done first-p maxmark)
+(defun opor-run-var-height (/ boundary holes grid supports table errors insert-errors done first-p maxmark)
   (if (not (opor-environment-ready-for-mvp-p))
     nil
     (progn
@@ -609,7 +649,7 @@
             (setq holes (opor-detect-holes boundary))
             (if (not (opor-hole-regions-valid-p holes))
               (progn
-                (opor-log "Var остановлен: самопересечение проёма.")
+                (opor-log "Var остановлен: некорректная геометрия проёмов.")
                 (opor-layers-restore)
                 (setq done T))
               (progn
@@ -669,49 +709,65 @@
                               (progn
                                 (opor-fasteners-count)
                                 (opor-multi-accumulate)
-                                (opor-drawing-title-accumulate boundary)
                                 (opor-multi-log-contour "var-height"))))))))))))))
       (opor-layers-restore)
       (if (> (opor-session-get 'contour-count) 0)
         (progn
           (opor-multi-apply-totals)
           (setq errors (opor-session-get 'support-height-errors))
+          (setq insert-errors (opor-session-get 'support-insert-errors))
           (setq table (opor-insert-total-table *opor-session*))
-          (opor-insert-drawing-title *opor-session*)
-          (if (> errors 0)
-            (opor-alert
-              (strcat
-                "Не определены высоты для количества опор: "
-                (itoa errors)
-                "\nОпоры окрашены в оранжевый цвет.")))
-          (opor-log
-            (strcat
-              "Var завершён: опор="
-              (itoa (opor-session-get 'support-count))
-              ", длина лаг="
-              (itoa (opor-session-get 'lag-length-m))
-              " м"
-              (opor-lag-count-log-text)
-              (if (> (opor-session-get 'contour-count) 1)
-                (strcat ", контуров=" (itoa (opor-session-get 'contour-count)))
-                "")
-              ", ошибок высот="
-              (itoa errors)
-              ", областей="
-              (itoa (opor-session-get 'level-polyline-count))
-              ", треугольников="
-              (itoa (opor-session-get 'level-triangle-count))
-              (opor-tiles-log-text)
-              (opor-dbl-lag-log-text)
-              (opor-fasteners-log-text)
-              "."))
-          (opor-view-restore)
-          T)
+          (if table
+            (progn
+              (if (> errors 0)
+                (opor-alert
+                  (strcat
+                    "Не определены высоты для количества опор: "
+                    (itoa errors)
+                    "\nОпоры окрашены в оранжевый цвет.")))
+              (if (> insert-errors 0)
+                (opor-alert
+                  (strcat
+                    "Не удалось вставить опоры: " (itoa insert-errors) ".\n"
+                    "Итоговая таблица содержит только реально созданные опоры.")))
+              (opor-log
+                (strcat
+                  "Var завершён: опор="
+                  (itoa (opor-session-get 'support-count))
+                  ", длина лаг="
+                  (itoa (opor-session-get 'lag-length-m))
+                  " м"
+                  (opor-lag-count-log-text)
+                  (if (> (opor-session-get 'contour-count) 1)
+                    (strcat ", контуров=" (itoa (opor-session-get 'contour-count)))
+                    "")
+                  ", ошибок высот="
+                  (itoa errors)
+                  ", ошибок вставки опор="
+                  (itoa insert-errors)
+                  ", областей="
+                  (itoa (opor-session-get 'level-polyline-count))
+                  ", треугольников="
+                  (itoa (opor-session-get 'level-triangle-count))
+                  (opor-tiles-log-text)
+                  (opor-dbl-lag-log-text)
+                  (opor-fasteners-log-text)
+                  "."))
+              (opor-view-restore)
+              (= insert-errors 0))
+            (progn
+              (opor-alert
+                "Расчёт Var выполнен, но итоговая таблица не вставлена. Команда завершена с ошибкой.")
+              (opor-log "Var не завершён: итоговая таблица не вставлена.")
+              (opor-view-restore)
+              nil)))
         (progn (opor-view-restore) nil)))))
 
 (defun opor-main (/ mode)
-  (opor-init-session)
   (setq mode (opor-ui-select-mode))
+  ;; Clean должен видеть предыдущую сессию. Раньше новый пустой session создавался
+  ;; ещё до выбора режима, поэтому OPOR -> Clean всегда сообщал 0 объектов.
+  (if (/= mode "clean") (opor-init-session))
   (cond
     ((= mode "const-height") (opor-run-const-height))
     ((= mode "var-height") (opor-run-var-height))

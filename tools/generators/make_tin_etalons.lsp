@@ -59,22 +59,26 @@
       "контур")))
 
 (defun c:ETS15 ()
-  (ets11-ensure-support-table)
-  (ets15-ensure-layer "контур" 7)
-  (ets15-ensure-layer "линии_высот" 8)
-  (ets15-insert-mark '(0.0 0.0) "0" 256)
-  (ets15-insert-mark '(3000.0 0.0) "10" 256)
-  (ets15-insert-mark '(3000.0 5000.0) "20" 256)
-  (ets15-insert-mark '(0.0 5000.0) "10" 256)
-  ;; Красный центральный блок специально оставлен как проверка: drain-блок
-  ;; не должен менять геометрию треугольных областей.
-  (ets15-insert-mark '(1500.0 2500.0) "10" 1)
-  ;; Контур создаётся последним, чтобы его было удобно выбрать до построения TIN.
-  (ets15-create-boundary)
-  (vla-ZoomExtents (vlax-get-acad-object))
-  (princ "\n[ETS15] Готово: контур 3000x5000, 5 отметок; центральная отметка красная.")
-  (princ "\n[ETS15] Авто: OPORTIN -> выбрать внешний контур -> TINDUMP; ожидается 4 треугольника.")
-  (princ "\n[ETS15] Затем Var: lev, 600/600, R100, доска, floor=101, доска=27, лага=49, сдвиг=0, vect.")
+  ;; Старый ETS15 рассчитывал на готовый DWT. Для чистого DWG сначала явно
+  ;; импортируем рабочее определение отметки из переносимой библиотеки OPOR.
+  (if (not (opor-import-level-block))
+    (princ "\n[ETS15] ОШИБКА: не удалось загрузить блок otmetka_oporvb из библиотеки OPOR.")
+    (progn
+      (ets15-ensure-layer "контур" 7)
+      (ets15-ensure-layer "линии_высот" 8)
+      (ets15-insert-mark '(0.0 0.0) "0" 256)
+      (ets15-insert-mark '(3000.0 0.0) "10" 256)
+      (ets15-insert-mark '(3000.0 5000.0) "20" 256)
+      (ets15-insert-mark '(0.0 5000.0) "10" 256)
+      ;; Красный центральный блок специально оставлен как проверка: drain-блок
+      ;; не должен менять геометрию треугольных областей.
+      (ets15-insert-mark '(1500.0 2500.0) "10" 1)
+      ;; Контур создаётся последним, чтобы его было удобно выбрать до построения TIN.
+      (ets15-create-boundary)
+      (vl-catch-all-apply 'vla-ZoomExtents (list (vlax-get-acad-object)))
+      (princ "\n[ETS15] Готово: контур 3000x5000, 5 отметок; центральная отметка красная.")
+      (princ "\n[ETS15] Авто: OPORTIN -> выбрать внешний контур -> TINDUMP; ожидается 4 треугольника.")
+      (princ "\n[ETS15] Затем Var: lev, 600/600, R100, доска, floor=101, доска=27, лага=49, сдвиг=0, vect.")))
   (princ))
 
 (defun c:ETS15MANUAL ()
@@ -87,7 +91,7 @@
   (ets15-polyline '((3000.0 5000.0) (0.0 5000.0) (1500.0 2500.0)) "линии_высот")
   (ets15-polyline '((0.0 5000.0) (0.0 0.0) (1500.0 2500.0)) "линии_высот")
   (ets15-create-boundary)
-  (vla-ZoomExtents (vlax-get-acad-object))
+  (vl-catch-all-apply 'vla-ZoomExtents (list (vlax-get-acad-object)))
   (princ "\n[ETS15MANUAL] Готово: построены 4 независимых ручных треугольника.")
   (princ "\n[ETS15MANUAL] TINDUMP должен показать TRI=4, XDATA_TIN=0.")
   (princ))

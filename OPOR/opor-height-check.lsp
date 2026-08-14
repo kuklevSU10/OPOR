@@ -118,8 +118,7 @@
           *opor-layer-triangles*
           "0"))
       (vl-catch-all-apply 'vla-put-Layer (list pl layer))
-      (opor-register-created pl "height-check-triangle")
-      pl)))
+      (opor-register-created pl "height-check-triangle"))))
 
 (defun opor-height-check-copy-area (area from to / copy result)
   (setq result (vl-catch-all-apply 'vla-Copy (list area)))
@@ -130,8 +129,7 @@
       (vl-catch-all-apply
         'vla-Move
         (list copy (vlax-3d-point from) (vlax-3d-point to)))
-      (opor-register-created copy "height-check-area")
-      copy)))
+      (opor-register-created copy "height-check-area"))))
 
 (defun opor-height-check-value-text (value)
   (if (numberp value) (itoa (opor-round-half-even value)) ""))
@@ -157,9 +155,12 @@
               (opor-height-check-value-text floor-height)
               "-"
               (opor-height-check-value-text support-height)))))
-      (opor-set-attribute-values block values)
-      (opor-register-created block "height-check-block")
-      block)))
+      (if (and (opor-set-attribute-values block values)
+               (opor-register-created block "height-check-block"))
+        block
+        (progn
+          (opor-delete-object block)
+          nil)))))
 
 ;; acad_calc округляет XY перед CAL ILP; воспроизводим это без SendCommand.
 (defun opor-height-check-rounded-xy (pt)

@@ -111,6 +111,9 @@
        (wcmatch (strcase msg) "*CANCEL*,*QUIT*,*BREAK*,*ПРЕРВАН*,*ОТМЕН*")))
 
 (defun opor-safe-restore-visuals ()
+  (if (and (boundp '*opor-tin-pending-objects*)
+           *opor-tin-pending-objects*)
+    (vl-catch-all-apply 'opor-tin-rollback-pending-objects nil))
   (vl-catch-all-apply 'opor-layers-restore nil)
   (vl-catch-all-apply 'opor-unhighlight-session nil)
   (vl-catch-all-apply 'opor-view-restore nil)

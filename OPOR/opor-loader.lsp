@@ -134,15 +134,41 @@
 ;; (Downloads и т.п.) с сообщением "Загрузка файла отменена". Добавляем свою
 ;; папку в TRUSTEDPATHS до загрузки модулей. Ошибки намеренно проглатываются:
 ;; если setvar недоступен, остаётся прежнее поведение (запрос доверия).
-(defun opor-trust-self-root (/ cur root)
+(defun opor-loader-split-trusted-paths (value / result pos item)
+  (setq result '())
+  (while (setq pos (vl-string-position 59 value))
+    (setq item (substr value 1 pos))
+    (setq result (cons item result))
+    (setq value (substr value (+ pos 2))))
+  (reverse (cons value result)))
+
+(defun opor-loader-normalize-trusted-path (value)
+  (if value
+    (strcase
+      (vl-string-translate "/" "\\"
+        (vl-string-right-trim "\\/"
+          (vl-string-trim " \t\"" value))))
+    ""))
+
+(defun opor-loader-root-trusted-p (root trusted / found item)
+  (setq root (opor-loader-normalize-trusted-path root) found nil)
+  (foreach item (opor-loader-split-trusted-paths (if trusted trusted ""))
+    (if (= root (opor-loader-normalize-trusted-path item))
+      (setq found T)))
+  found)
+
+(defun opor-trust-self-root (/ cur root separator)
   (setq root *opor-root*)
   (if (and root (/= root "") (/= root "."))
     (progn
       (setq cur (getvar "TRUSTEDPATHS"))
       (if (or (null cur) (= cur ""))
         (setvar "TRUSTEDPATHS" root)
-        (if (not (vl-string-search (strcase root) (strcase cur)))
-          (setvar "TRUSTEDPATHS" (strcat cur ";" root)))))))
+        (if (not (opor-loader-root-trusted-p root cur))
+          (progn
+            (setq separator
+              (if (= (substr cur (strlen cur) 1) ";") "" ";"))
+            (setvar "TRUSTEDPATHS" (strcat cur separator root))))))))
 (vl-catch-all-apply 'opor-trust-self-root nil)
 
 (foreach module

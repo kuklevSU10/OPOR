@@ -14,7 +14,7 @@
 ;   * если плагин уже установлен — предлагает обновить или удалить.
 
 #define MyAppName "OPOR"
-#define MyAppVersion "3.32.0"
+#include "version.generated.iss"
 #define MyAppPublisher "sayan group"
 #define MyAppURL "https://sayangroup.ru/"
 
@@ -273,7 +273,10 @@ begin
   if SaveStringToFile(ExpandConstant('{app}\PackageContents.xml'), Xml, False) then
     Log('OPOR: PackageContents.xml записан, блоков: ' + IntToStr(Picked))
   else
+  begin
     Log('OPOR: НЕ УДАЛОСЬ записать PackageContents.xml');
+    RaiseException('Не удалось создать PackageContents.xml. OPOR не установлен.');
+  end;
 end;
 
 { ------------------------------------------------------------------ }
@@ -423,12 +426,18 @@ function RunExistingUninstaller(): Boolean;
 var
   S: String;
   ResultCode: Integer;
+  Started: Boolean;
 begin
   Result := False;
   S := RemoveQuotes(GetUninstallString());
   if S <> '' then
-    Result := Exec(S, '/SILENT /NORESTART /SUPPRESSMSGBOXES', '',
-                   SW_SHOW, ewWaitUntilTerminated, ResultCode);
+  begin
+    Started := Exec(S, '/SILENT /NORESTART /SUPPRESSMSGBOXES', '',
+                    SW_SHOW, ewWaitUntilTerminated, ResultCode);
+    Result := Started and (ResultCode = 0);
+    if Started and (ResultCode <> 0) then
+      Log('OPOR: деинсталлятор завершился с кодом ' + IntToStr(ResultCode));
+  end;
 end;
 
 { ------------------------------------------------------------------ }

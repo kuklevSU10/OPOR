@@ -42,10 +42,12 @@
               '(lambda (item) (and (listp item) (= (car item) 1040)))
               (cdr app)))
           (if values (setq exact (cdr (car values))))))))
-  ;; Авто-TIN показывает три знака. Если пользователь поменял атрибут заметнее
-  ;; половины последнего знака, считаем новое видимое значение главным.
+  ;; Авто-TIN показывает целый процент, но хранит точный градиент для обратного
+  ;; расчёта отметок. Если видимое число совпадает с штатным округлением XData,
+  ;; используем точное; ручное изменение на другое целое становится главным.
   (if (and (numberp exact) (numberp visible)
-           (<= (abs (- exact visible)) 0.0005001))
+           (= (opor-round exact) (fix visible))
+           (equal visible (float (fix visible)) 1e-9))
     exact
     visible))
 
@@ -222,9 +224,11 @@
     nil
     (progn
       (setq block value)
-      (opor-support-set-first-attribute block text)
-      (opor-register-created block "slope-level-mark")
-      block)))
+      (if (opor-support-set-first-attribute block text)
+        (opor-register-created block "slope-level-mark")
+        (progn
+          (opor-delete-object block)
+          nil)))))
 
 (defun opor-slope-level-write
   (points known marks plus-p / index pt height mark object text inserted updated failed)
@@ -236,10 +240,9 @@
     (if mark
       (progn
         (setq object (cdr (assoc 'object mark)))
-        (if object
-          (progn
-            (opor-support-set-first-attribute object text)
-            (setq updated (1+ updated)))
+        (if (and object
+                 (opor-support-set-first-attribute object text))
+          (setq updated (1+ updated))
           (setq failed (1+ failed))))
       (if (opor-slope-level-insert-mark pt text)
         (setq inserted (1+ inserted))
@@ -260,8 +263,8 @@
       (opor-alert
         "Не найден блок отметки otmetka_oporvb и не удалось загрузить его из библиотеки.")
       nil)
-    ((not (opor-block-exists-p "slope"))
-      (opor-alert "Не найден блок уклона slope.")
+    ((not (opor-import-slope-block))
+      (opor-alert "Не удалось загрузить блок уклона slope из библиотеки OPOR.")
       nil)
     (t
       (opor-view-save)

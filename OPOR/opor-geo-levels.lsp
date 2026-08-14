@@ -476,9 +476,7 @@
       (vl-catch-all-apply 'vla-put-Layer (list block layer))
       (vl-catch-all-apply 'vla-put-Color (list block color))
       (if (opor-tin-set-mark-text block (rtos height 2 3))
-        (progn
-          (opor-register-created block "geo-level-mark")
-          block)
+        (opor-register-created block "geo-level-mark")
         (progn
           (opor-delete-object block)
           nil)))))

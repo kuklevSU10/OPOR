@@ -120,5 +120,45 @@
       T))
   (princ))
 
-(princ "\n[ETS7] make_slope_etalons загружен. Команда: ETS7.")
+;; ETS23: отдельная приёмка нового ТЗ без изменения старого golden ETS7.
+;; В каждой области стоят одновременно PRO и 3D: Slope обязан менять только PRO.
+(defun ets23-blocks-ready-p (/ value missing)
+  (vl-catch-all-apply 'opor-import-support-blocks nil)
+  (vl-catch-all-apply 'opor-import-slope-block nil)
+  (vl-catch-all-apply 'opor-import-slope-table-block nil)
+  (setq missing '())
+  (foreach name '("slope" "table_slope" "opor_symb3d" "opor_symbPRO")
+    (if (not (tblsearch "BLOCK" name))
+      (setq missing (cons name missing))))
+  (if missing
+    (progn
+      (princ "\n[ETS23] ОШИБКА: не найдены блоки:")
+      (foreach name (reverse missing) (princ (strcat " " name)))
+      nil)
+    T))
+
+(defun ets23-make-region (x text)
+  (ets7-rect x 0.0 (+ x 1000.0) 1000.0 "линии_высот")
+  (ets7-insert "slope" (+ x 500.0) 500.0 "0" 256 text)
+  (ets7-insert "opor_symbPRO" (+ x 300.0) 350.0 "опорыvb" 7 "PRO")
+  (ets7-insert "opor_symb3d" (+ x 700.0) 650.0 "опорыvb" 7 "3D"))
+
+(defun c:ETS23 ()
+  (if (ets23-blocks-ready-p)
+    (progn
+      (ets7-ensure-layer "контур" 7)
+      (ets7-ensure-layer "линии_высот" 8)
+      (ets7-ensure-layer "опорыvb" 7)
+      (ets7-ensure-layer "опоры_текстvb" 9)
+      (ets7-rect -200.0 -200.0 5100.0 1200.0 "контур")
+      (ets23-make-region 0.0 "1.04%")
+      (ets23-make-region 1300.0 "0.26%")
+      (ets23-make-region 2600.0 "0.742%")
+      (ets23-make-region 3900.0 "1.5%")
+      (princ "\n[ETS23] Готово: 4 области, в каждой по одной PRO и 3D.")
+      (princ "\n[ETS23] Запустите OPORSLOPE, выберите внешний контур, точку таблицы, затем Enter.")
+      (princ "\n[ETS23] Ожидание: slope=1%/0%/1%/2%; PRO удалено 3, осталось 1; 3D осталось 4 без изменений; P2=1.")))
+  (princ))
+
+(princ "\n[ETS7/ETS23] make_slope_etalons загружен. Команды: ETS7, ETS23.")
 (princ)

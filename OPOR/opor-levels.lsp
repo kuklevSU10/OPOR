@@ -18,6 +18,11 @@
         (setq idx (1+ idx)))))
   (reverse result))
 
+(defun opor-level-point-in-boundary-p (pt boundary tol)
+  (or
+    (opor-point-inside-boundary-p (opor-2d pt) boundary)
+    (opor-point-on-curve-p (opor-2d pt) boundary tol)))
+
 (defun opor-level-read-marks (boundary / bbox objects obj pt text value color marks)
   (setq bbox (opor-bbox boundary))
   (setq objects (opor-ssget-crossing-objects bbox (list (cons 0 "INSERT"))))
@@ -26,24 +31,53 @@
     (if (opor-level-block-p obj)
       (progn
         (setq pt (opor-2d (vlax-safearray->list (vlax-variant-value (vla-get-InsertionPoint obj)))))
-        (setq text (opor-first-attribute-text obj))
-        (setq value (opor-parse-real text nil))
-        (setq color (vla-get-Color obj))
-        (if value
-          (setq marks
-            (cons
-              (list
-                (cons 'point pt)
-                (cons 'height value)
-                (cons 'color color)
-                ;; Объект нужен TIN, чтобы отличать рассчитанные им отметки
-                ;; проёмов от исходных пользовательских блоков.
-                (cons 'object obj))
-              marks))))))
+        ;; B.Box соседних террас может пересекаться с выбранной. Оставляем
+        ;; только отметки внутри реального контура или не дальше штатного
+        ;; допуска сопоставления от его границы.
+        (if (opor-level-point-in-boundary-p
+              pt boundary *opor-vba-mark-match-tolerance*)
+          (progn
+            (setq text (opor-first-attribute-text obj))
+            (setq value (opor-parse-real text nil))
+            (setq color (vla-get-Color obj))
+            (if value
+              (setq marks
+                (cons
+                  (list
+                    (cons 'point pt)
+                    (cons 'height value)
+                    (cons 'color color)
+                    ;; Объект нужен TIN, чтобы отличать рассчитанные им отметки
+                    ;; проёмов от исходных пользовательских блоков.
+                    (cons 'object obj))
+                  marks))))))))
   (reverse marks))
 
-;; VBA берёт с 'линии_высот' любые полилинии в B.Box (без фильтра замкнутости)
-(defun opor-level-read-polylines (boundary / bbox objects result)
+;; Внутри первичного B.Box оставляем только полилинии, реально пересекающие
+;; выбранный контур: вершина внутри/на границе, пересечение рёбер либо замкнутая
+;; область охватывает вершину внешнего контура. Это изолирует соседние террасы.
+(defun opor-level-polyline-overlaps-boundary-p
+  (obj boundary / result pt intersections)
+  (setq result nil)
+  (foreach pt (opor-polyline-vertices obj)
+    (if (and (not result)
+             (opor-level-point-in-boundary-p pt boundary *opor-point-tolerance*))
+      (setq result T)))
+  (if (not result)
+    (progn
+      (setq intersections (opor-obj-intersections obj boundary))
+      (if intersections (setq result T))))
+  (if (and (not result) (opor-polyline-closed-p obj))
+    (foreach pt (opor-polyline-vertices boundary)
+      (if (and (not result)
+               (opor-level-point-in-boundary-p pt obj *opor-point-tolerance*))
+        (setq result T))))
+  result)
+
+;; VBA первоначально выбирает с 'линии_высот' любые полилинии в B.Box. После
+;; этого добавлен геометрический фильтр для независимой обработки нескольких
+;; соседних контуров; фильтр замкнутости по-прежнему не вводим.
+(defun opor-level-read-polylines (boundary / bbox objects result obj)
   (setq bbox (opor-bbox boundary))
   (setq objects
     (opor-ssget-crossing-objects
@@ -53,7 +87,9 @@
         (cons 8 *opor-layer-level-lines*))))
   (setq result '())
   (foreach obj objects
-    (if (opor-polyline-object-p obj)
+    (if (and
+          (opor-polyline-object-p obj)
+          (opor-level-polyline-overlaps-boundary-p obj boundary))
       (setq result (cons obj result))))
   (reverse result))
 
@@ -80,6 +116,21 @@
       (setq missing (cons pt missing))))
   (reverse missing))
 
+;; Эти отметки — технические концы хорд дуги, созданные OPORTIN. Они нужны
+;; Var для высот треугольников, но не являются конструктивными вершинами,
+;; в которых обязательно ставить отдельную опору.
+(defun opor-level-curve-sample-mark-p (mark / obj)
+  (setq obj (cdr (assoc 'object mark)))
+  (and obj
+       (= (opor-object-xdata-type obj) "tin-interpolated-curve-mark")))
+
+(defun opor-level-curve-sample-points (marks / result mark)
+  (setq result '())
+  (foreach mark marks
+    (if (opor-level-curve-sample-mark-p mark)
+      (setq result (cons (cdr (assoc 'point mark)) result))))
+  (reverse result))
+
 ;; Оранжевый круг-маркер как в VBA (AddCircle цвет 30), с XData для OPORCLEAN
 (defun opor-error-circle (pt / circle)
   (setq circle
@@ -90,14 +141,13 @@
     nil
     (progn
       (vl-catch-all-apply 'vla-put-Color (list circle *opor-error-color*))
-      (opor-register-created circle "error-marker")
-      circle)))
+      (opor-register-created circle "error-marker"))))
 
 (defun opor-error-circles (points)
   (foreach pt points (opor-error-circle pt)))
 
 ;; --- Фаза 1: скан и валидация ДО параметров (как a_main до формы) ---
-(defun opor-level-scan (session / boundary marks plines level-vertices contour-vertices missing-contour missing-area)
+(defun opor-level-scan (session / boundary marks plines level-vertices contour-vertices curve-sample-points missing-contour missing-area)
   (setq boundary (opor-session-get 'outer-boundary))
   (setq marks (opor-level-read-marks boundary))
   (setq plines (opor-level-read-polylines boundary))
@@ -113,9 +163,11 @@
   (setq missing-contour (opor-level-unmarked-points contour-vertices marks))
   ;; chk_heightPLblk: на каждой вершине областей высот есть блок отметки
   (setq missing-area (opor-level-unmarked-points level-vertices marks))
+  (setq curve-sample-points (opor-level-curve-sample-points marks))
   (opor-session-set 'level-marks marks)
   (opor-session-set 'level-polylines plines)
   (opor-session-set 'level-vertex-points level-vertices)
+  (opor-session-set 'level-curve-sample-points curve-sample-points)
   (opor-session-set 'level-mark-count (length marks))
   (opor-session-set 'level-polyline-count (length plines))
   (opor-session-set 'level-vertex-count (length level-vertices))
@@ -237,20 +289,54 @@
     (cons 'c (cdr (assoc 'point c)))
     (cons 'cz (opor-round-half-even (cdr (assoc 'height c))))))
 
-;; Вершины области: дедуп дистанцией < 1 (h_triang), привязка к отметке окном < 1
-(defun opor-level-vertex-entries (pline marks / pts entries mark)
-  (setq pts (opor-unique-points (opor-polyline-vertices pline) 1.0))
+;; Промежуточная точка дуги получает высоту линейной интерполяцией между
+;; отметками концов сегмента. Параметр LWPOLYLINE внутри bulge-сегмента
+;; пропорционален пройденной длине — та же семантика уже используется
+;; getH_bords. Эти точки существуют только в расчёте и не создают блоки.
+(defun opor-level-curve-entry-at-point
+  (pline pt marks / mark param endp seg tval p1 p2 h1 h2)
+  (setq mark (opor-level-mark-at-point marks pt *opor-vba-mark-match-tolerance*))
+  (if mark
+    (list
+      (cons 'point (opor-2d pt))
+      (cons 'height (cdr (assoc 'height mark)))
+      (cons 'color (cdr (assoc 'color mark))))
+    (progn
+      (setq param
+        (vl-catch-all-apply
+          '(lambda () (vlax-curve-getParamAtPoint pline (opor-2d pt)))))
+      (if (vl-catch-all-error-p param)
+        nil
+        (progn
+          (setq endp (fix (vlax-curve-getEndParam pline)))
+          (setq seg (fix param))
+          (if (>= seg endp) (setq seg (1- endp)))
+          (if (< seg 0) (setq seg 0))
+          (setq tval (- param seg))
+          (setq p1 (vlax-curve-getPointAtParam pline seg))
+          (setq p2 (vlax-curve-getPointAtParam pline (1+ seg)))
+          (setq h1 (opor-level-mark-height marks p1))
+          (setq h2 (opor-level-mark-height marks p2))
+          (if (and (numberp h1) (numberp h2))
+            (list
+              (cons 'point (opor-2d pt))
+              (cons 'height (+ (* h1 (- 1.0 tval)) (* h2 tval)))
+              (cons 'color 256))
+            nil))))))
+
+;; Вершины области: дедуп дистанцией < 1 (h_triang), привязка к отметке окном < 1.
+;; Для прямых полилиний список точек остаётся прежним; для bulge-дуг добавляются
+;; расчётные точки с погрешностью хорды не выше *opor-curve-chord-tolerance*.
+(defun opor-level-vertex-entries (pline marks / pts entries entry)
+  (setq pts
+    (opor-unique-points
+      (opor-polyline-linearized-vertices
+        pline *opor-curve-chord-tolerance*)
+      1.0))
   (setq entries '())
   (foreach pt pts
-    (setq mark (opor-level-mark-at-point marks pt *opor-vba-mark-match-tolerance*))
-    (if mark
-      (setq entries
-        (cons
-          (list
-            (cons 'point (opor-2d pt))
-            (cons 'height (cdr (assoc 'height mark)))
-            (cons 'color (cdr (assoc 'color mark))))
-          entries))))
+    (setq entry (opor-level-curve-entry-at-point pline pt marks))
+    (if entry (setq entries (cons entry entries))))
   (reverse entries))
 
 (defun opor-level-triangulate-poly (pline marks / entries drain start ordered result idx a b c)
@@ -304,8 +390,8 @@
         (setq pl (vla-AddLightWeightPolyline (opor-ms) arr))
         (vla-put-Closed pl :vlax-true)
         (vla-put-Layer pl *opor-layer-triangles*)
-        (opor-register-created pl "triangle")
-        (setq n (1+ n)))))
+        (if (opor-register-created pl "triangle")
+          (setq n (1+ n))))))
   n)
 
 (defun opor-sign2d (p a b)
@@ -451,7 +537,7 @@
   (list block support))
 
 ;; --- Фаза 3: расстановка (b2_mains: вершины -> границы -> узлы) ---
-(defun opor-supports-place-variable (session / groups vertices border nodes notborder marks plines triangles hmax supports holes blocks counts errors pt lev placed block support)
+(defun opor-supports-place-variable (session / groups vertices border nodes notborder marks plines triangles hmax supports holes blocks counts errors insert-errors pt lev placed block support)
   (setq marks (opor-session-get 'level-marks))
   (setq plines (opor-session-get 'level-polylines))
   (setq triangles (opor-session-get 'level-triangles))
@@ -467,6 +553,7 @@
   (setq blocks '())
   (setq counts '())
   (setq errors 0)
+  (setq insert-errors 0)
   (opor-session-set 'var-aborted nil)
   ;; вершины: отметка прямо в точке
   (foreach pt vertices
@@ -474,10 +561,13 @@
     (setq placed (opor-level-place-one pt lev supports))
     (setq block (car placed))
     (setq support (cadr placed))
-    (if support
-      (setq counts (opor-support-count-color-row support counts))
-      (setq errors (1+ errors)))
-    (if block (setq blocks (cons block blocks))))
+    (if block
+      (progn
+        (setq blocks (cons block blocks))
+        (if support
+          (setq counts (opor-support-count-color-row support counts))
+          (setq errors (1+ errors))))
+      (setq insert-errors (1+ insert-errors))))
   ;; границы: интерполяция вдоль линий областей высот
   (setq notborder '())
   (foreach pt border
@@ -487,10 +577,13 @@
         (setq placed (opor-level-place-one pt lev supports))
         (setq block (car placed))
         (setq support (cadr placed))
-        (if support
-          (setq counts (opor-support-count-color-row support counts))
-          (setq errors (1+ errors)))
-        (if block (setq blocks (cons block blocks))))
+        (if block
+          (progn
+            (setq blocks (cons block blocks))
+            (if support
+              (setq counts (opor-support-count-color-row support counts))
+              (setq errors (1+ errors))))
+          (setq insert-errors (1+ insert-errors))))
       (setq notborder (cons pt notborder))))
   (setq notborder (reverse notborder))
   (if (and notborder (not holes))
@@ -508,6 +601,7 @@
       (opor-session-set 'support-count (length blocks))
       (opor-session-set 'support-counts counts)
       (opor-session-set 'support-height-errors errors)
+      (opor-session-set 'support-insert-errors insert-errors)
       blocks)
     (progn
       ;; VBA: точки "не на границе" уходят в узлы
@@ -517,15 +611,19 @@
         (setq placed (opor-level-place-one pt lev supports))
         (setq block (car placed))
         (setq support (cadr placed))
-        (if support
-          (setq counts (opor-support-count-color-row support counts))
-          (setq errors (1+ errors)))
-        (if block (setq blocks (cons block blocks))))
+        (if block
+          (progn
+            (setq blocks (cons block blocks))
+            (if support
+              (setq counts (opor-support-count-color-row support counts))
+              (setq errors (1+ errors))))
+          (setq insert-errors (1+ insert-errors))))
       (setq blocks (reverse blocks))
       (opor-session-set 'support-blocks blocks)
       (opor-session-set 'support-count (length blocks))
       (opor-session-set 'support-counts counts)
       (opor-session-set 'support-height-errors errors)
+      (opor-session-set 'support-insert-errors insert-errors)
       blocks)))
 
 (princ)

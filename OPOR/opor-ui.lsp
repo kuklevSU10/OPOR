@@ -107,7 +107,7 @@
             (t "Lastra Soft"))
           suffix)))
       (if (opor-lag-tile-fastener-p tilef)
-        (setq step (opor-ui-read-real "\nШаг креплений плитки, мм" 500.0)))))
+        (setq step (opor-ui-read-positive-real "\nШаг креплений плитки, мм" 500.0)))))
   (setq err (opor-floor-composition-error-values tile-mode lagf tilef))
   (if err
     (progn
@@ -252,7 +252,7 @@
       T)
     nil))
 
-(defun opor-ui-read-params-cmd (/ line support axis step-x step-y tile-size radius tile-mode board-layout fasteners-ok pts)
+(defun opor-ui-read-params-cmd (/ line support axis step-x step-y tile-size radius tile-mode board-layout board-width board-thickness lag-width lag-thickness composition fasteners-ok pts)
   (setq line (opor-ui-read-line))
   (if (not (opor-ui-line-ready-p line))
     nil
@@ -272,9 +272,36 @@
         (if (= tile-mode "d")
           (opor-ui-read-board-layout)
           (list (cdr (assoc 'board-length *opor-default-params*)) "none" 0.0)))
+      (if (= tile-mode "d")
+        (progn
+          (setq board-width
+            (opor-ui-read-positive-real "\nШирина доски, мм"
+              (cdr (assoc 'board-width *opor-default-params*))))
+          (setq board-thickness
+            (opor-ui-read-positive-real "\nТолщина доски, мм"
+              (cdr (assoc 'board-thickness *opor-default-params*)))))
+        (progn
+          (setq board-width (cdr (assoc 'board-width *opor-default-params*)))
+          (setq board-thickness (cdr (assoc 'board-thickness *opor-default-params*)))))
       (setq fasteners-ok (opor-ui-read-fasteners line tile-mode))
       (if fasteners-ok
         (progn
+          (setq composition
+            (opor-floor-composition-values
+              tile-mode
+              (opor-session-get 'lag-fastener)
+              (opor-session-get 'tile-fastener)))
+          (if (member composition '("board-lag" "tile-lag"))
+            (progn
+              (setq lag-width
+                (opor-ui-read-positive-real "\nШирина лаги, мм"
+                  (cdr (assoc 'lag-width *opor-default-params*))))
+              (setq lag-thickness
+                (opor-ui-read-positive-real "\nВысота лаги, мм"
+                  (cdr (assoc 'lag-thickness *opor-default-params*)))))
+            (progn
+              (setq lag-width (cdr (assoc 'lag-width *opor-default-params*)))
+              (setq lag-thickness (cdr (assoc 'lag-thickness *opor-default-params*)))))
           (setq axis (opor-ui-read-lag-axis))
           (setq pts (opor-ui-pick-points))))
       (if (and fasteners-ok pts)
@@ -290,7 +317,11 @@
           (opor-session-set 'tile-size-y (cadr tile-size))
           (opor-session-set 'radius radius)
           (opor-session-set 'tile-mode tile-mode)
+          (opor-session-set 'board-width board-width)
+          (opor-session-set 'board-thickness board-thickness)
           (opor-session-set 'board-length (car board-layout))
+          (opor-session-set 'lag-width lag-width)
+          (opor-session-set 'lag-thickness lag-thickness)
           (opor-session-set 'double-lag-layout (cadr board-layout))
           (opor-session-set 'double-lag-step (caddr board-layout))
           (opor-session-set 'lag-axis axis)
@@ -302,7 +333,7 @@
           (opor-log "Ввод параметров отменён.")
           nil)))))
 
-(defun opor-ui-read-var-params-cmd (/ line axis step-x step-y tile-size radius board-layout tile-mode floor-height board-thickness lag-thickness tile-thickness fasteners-ok pts supports maxmark)
+(defun opor-ui-read-var-params-cmd (/ line axis step-x step-y tile-size radius board-layout tile-mode floor-height board-width board-thickness lag-width lag-thickness tile-thickness composition fasteners-ok pts supports maxmark)
   (setq line (opor-ui-read-line))
   (if (not (opor-ui-line-ready-p line))
     nil
@@ -337,19 +368,31 @@
           (setq floor-height nil)))
       (if (and floor-height (= tile-mode "d"))
         (progn
-          (setq board-thickness (opor-ui-read-real "\nТолщина доски, мм" (cdr (assoc 'board-thickness *opor-default-params*))))
-          (setq lag-thickness (opor-ui-read-real "\nТолщина лаги, мм" (cdr (assoc 'lag-thickness *opor-default-params*))))
+          (setq board-width (opor-ui-read-positive-real "\nШирина доски, мм" (cdr (assoc 'board-width *opor-default-params*))))
+          (setq board-thickness (opor-ui-read-positive-real "\nТолщина доски, мм" (cdr (assoc 'board-thickness *opor-default-params*))))
           (setq tile-thickness (cdr (assoc 'tile-thickness *opor-default-params*)))))
       (if (and floor-height (= tile-mode "p"))
         (progn
+          (setq board-width (cdr (assoc 'board-width *opor-default-params*)))
           (setq board-thickness (cdr (assoc 'board-thickness *opor-default-params*)))
-          (setq lag-thickness (cdr (assoc 'lag-thickness *opor-default-params*)))
-          (setq tile-thickness (opor-ui-read-real "\nТолщина плитки, мм" (cdr (assoc 'tile-thickness *opor-default-params*))))))
+          (setq tile-thickness (opor-ui-read-positive-real "\nТолщина плитки, мм" (cdr (assoc 'tile-thickness *opor-default-params*))))))
       (if floor-height
         (progn
           (setq fasteners-ok (opor-ui-read-fasteners line tile-mode))
           (if fasteners-ok
             (progn
+              (setq composition
+                (opor-floor-composition-values
+                  tile-mode
+                  (opor-session-get 'lag-fastener)
+                  (opor-session-get 'tile-fastener)))
+              (if (member composition '("board-lag" "tile-lag"))
+                (progn
+                  (setq lag-width (opor-ui-read-positive-real "\nШирина лаги, мм" (cdr (assoc 'lag-width *opor-default-params*))))
+                  (setq lag-thickness (opor-ui-read-positive-real "\nВысота лаги, мм" (cdr (assoc 'lag-thickness *opor-default-params*)))))
+                (progn
+                  (setq lag-width (cdr (assoc 'lag-width *opor-default-params*)))
+                  (setq lag-thickness (cdr (assoc 'lag-thickness *opor-default-params*)))))
               (setq axis (opor-ui-read-lag-axis))
               (setq pts (opor-ui-pick-points))))))
       (if (and supports floor-height fasteners-ok pts)
@@ -367,7 +410,9 @@
           (opor-session-set 'double-lag-step (caddr board-layout))
           (opor-session-set 'tile-mode tile-mode)
           (opor-session-set 'floor-height floor-height)
+          (opor-session-set 'board-width board-width)
           (opor-session-set 'board-thickness board-thickness)
+          (opor-session-set 'lag-width lag-width)
           (opor-session-set 'lag-thickness lag-thickness)
           (opor-session-set 'tile-thickness tile-thickness)
           (opor-session-set 'lag-axis axis)

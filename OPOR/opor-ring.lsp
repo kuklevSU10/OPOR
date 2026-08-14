@@ -122,9 +122,13 @@
           (foreach pair (opor-ring-tag-values (cdr (assoc 'counts result)))
             (setq values
               (opor-table-value-put (car pair) (cdr pair) values)))
-          (opor-set-attribute-values block values)
-          (opor-register-created block "ring-table")
-          block)))
+          (if (and (opor-set-attribute-values block values)
+                   (opor-register-created block "ring-table"))
+            block
+            (progn
+              (opor-delete-object block)
+              (opor-alert "Ведомость Ring не заполнена или не помечена XData OPOR.")
+              nil)))))
     (progn
       (opor-alert (strcat "Не найден блок итоговой таблицы " (opor-string block-name) "."))
       nil)))

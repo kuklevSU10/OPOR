@@ -144,7 +144,7 @@
           (setq text (opor-write-level-prefixed-text new-value plus-p))
           (setq result
             (vl-catch-all-apply 'opor-support-set-first-attribute (list block text)))
-          (if (vl-catch-all-error-p result)
+          (if (or (vl-catch-all-error-p result) (not result))
             nil
             (progn
               (opor-log
@@ -162,8 +162,8 @@
       (opor-alert
         "Не найден блок отметки otmetka_oporvb и не удалось загрузить его из библиотеки.")
       nil)
-    ((not (opor-block-exists-p "slope"))
-      (opor-alert "Не найден блок уклона slope.")
+    ((not (opor-import-slope-block))
+      (opor-alert "Не удалось загрузить блок уклона slope из библиотеки OPOR.")
       nil)
     (t
       (setq reference

@@ -78,10 +78,16 @@
     (= (opor-obj-name obj) "AcDbBlockReference")
     (= (strcase (opor-effective-block-name obj)) (strcase name))))
 
-(defun opor-slope-support-block-p (obj / name)
+(defun opor-slope-any-support-block-p (obj / name)
   (setq name (strcase (opor-effective-block-name obj)))
   (member name
     (mapcar 'strcase '("opor_symb" "opor_symb3d" "opor_symbPRO"))))
+
+(defun opor-slope-support-block-p (obj / name)
+  (setq name (strcase (opor-effective-block-name obj)))
+  ;; Корректор уклона применяется только к Level PRO. Опоры Level 3D
+  ;; OPORSLOPE не красит, не считает и не удаляет.
+  (= name (strcase "opor_symbPRO")))
 
 ;; VBA SelectionSet.Select видит INSERT на выключенных слоях, а ssget "_C" —
 ;; нет. Поэтому блоки читаем прямо из ModelSpace и проверяем пересечение bbox
@@ -141,10 +147,10 @@
   (foreach obj objects
     (setq pt (opor-slope-flatten-block obj))
     (setq raw (opor-slope-number-from-block obj))
-    (setq rounded (if (numberp raw) (opor-round-half-even raw) nil))
+    (setq rounded (if (numberp raw) (opor-round raw) nil))
     (setq text (if (numberp rounded) (strcat (itoa rounded) "%") nil))
-    ;; j_slope обновляет округлённый текст только для фактического уклона >=2.
-    (if (and (numberp raw) (>= raw *opor-slope-min-percent*))
+    ;; По новому ТЗ любой видимый процент всегда целый, включая 0% и 1%.
+    (if (numberp rounded)
       (opor-support-set-first-attribute obj text))
     (setq records
       (cons
@@ -237,7 +243,7 @@
       (setq dist (distance pmin pmax))
       (setq value
         (if (> dist 1e-9)
-          (opor-round-half-even (* (/ (- levmax levmin) dist) 100.0))
+          (opor-round (* (/ (- levmax levmin) dist) 100.0))
           0)))
     (setq value 0))
   (opor-support-set-first-attribute block (strcat (itoa value) "%"))
@@ -248,8 +254,8 @@
   (list value (nth 4 mm)))
 
 (defun opor-slope-write-run (/ boundary bbox blocks slopes marks areas processed errmin errmax missing record result value)
-  (if (not (opor-block-exists-p "slope"))
-    (progn (opor-alert "Не найден блок уклона slope.") nil)
+  (if (not (opor-import-slope-block))
+    (progn (opor-alert "Не удалось загрузить блок уклона slope из библиотеки OPOR.") nil)
     (progn
       (opor-ensure-layer *opor-layer-support-text* 9 "Continuous")
       ;; VBA оставляет слой ошибок выключенным.
@@ -354,7 +360,7 @@
   (if (not (numberp value)) (setq value 0))
   (opor-session-set key (1+ value)))
 
-(defun opor-slope-process-contour (boundary colors counts / bbox blocks areas slopes supports remaining next record raw rounded color)
+(defun opor-slope-process-contour (boundary colors counts / bbox blocks areas slopes all-supports supports remaining next record raw rounded color)
   (setq bbox (opor-bbox boundary))
   (opor-zoom-to-boundary boundary)
   (setq blocks (opor-slope-crossing-blocks bbox))
@@ -362,13 +368,18 @@
   (setq slopes
     (opor-slope-prepare-records
       (opor-slope-filter-blocks blocks "slope")))
+  (setq all-supports
+    (vl-remove-if-not 'opor-slope-any-support-block-p blocks))
+  ;; Draw order относится ко всем опорам, даже когда корректоры считаются
+  ;; только для семейства PRO.
+  (opor-supports-move-to-top all-supports)
   (setq supports (opor-slope-filter-supports blocks))
   (cond
     ((not slopes)
       (opor-alert "Не найдены блоки уклонов.")
       counts)
     ((not supports)
-      (opor-alert "Не найдены блоки опор.")
+      (opor-alert "Не найдены блоки опор Level PRO. Опоры Level 3D для Slope игнорируются.")
       counts)
     ((not areas)
       (opor-alert "Не найдены области высот.")
@@ -386,7 +397,8 @@
                 (setq next '())
                 (foreach support remaining
                   (if (opor-slope-support-in-area-p support area)
-                    (if (>= raw *opor-slope-min-percent*)
+                    (if (and (numberp rounded)
+                             (>= rounded *opor-slope-min-percent*))
                       (progn
                         ;; AutoLISP (and ...) возвращает T/nil, не последнее
                         ;; значение: номер ACI надо извлекать отдельным присваиванием.
@@ -445,7 +457,7 @@
   (setq values (opor-slope-add-value-if-positive "P9-3" (* p9 3) values))
   values)
 
-(defun opor-slope-insert-table (pt counts / value block)
+(defun opor-slope-insert-table (pt counts / value block layer-result)
   (setq value
     (vl-catch-all-apply
       'vla-InsertBlock
@@ -460,9 +472,23 @@
       nil)
     (progn
       (setq block value)
-      (opor-register-created block "slope-table")
-      (opor-set-attribute-values block (opor-slope-table-values counts))
-      block)))
+      (setq layer-result
+        (vl-catch-all-apply 'vla-put-Layer
+          (list block *opor-layer-tables*)))
+      (if (vl-catch-all-error-p layer-result)
+        (progn
+          (vl-catch-all-apply 'vla-Delete (list block))
+          (opor-alert "Не удалось назначить таблице уклонов слой 0.")
+          nil)
+        (progn
+          (if (and
+                (opor-set-attribute-values block (opor-slope-table-values counts))
+                (opor-register-created block "slope-table"))
+            block
+            (progn
+              (opor-delete-object block)
+              (opor-alert "Таблица уклонов не заполнена или не помечена XData OPOR.")
+              nil)))))))
 
 (defun opor-slope-counts-text (counts / text)
   (setq text "")
@@ -473,11 +499,15 @@
         "P" (itoa (car pair)) "=" (itoa (cdr pair)))))
   text)
 
-(defun opor-slope-run (/ colors counts boundary table-point qloop done aborted table)
-  ;; В старых/пустых DWG определения table_slope может не быть. Дозагружаем
-  ;; утверждённый клиентский визуал; существующее определение не переопределяем.
-  (opor-import-slope-table-block)
+(defun opor-slope-run (/ colors counts boundary table-point qloop done aborted table library-ok)
+  ;; Утверждённый клиентский визуал всегда берём из актуальной библиотеки.
+  ;; Если обновление не удалось, старое одноимённое определение не используем.
+  (setq library-ok
+    (and (opor-import-slope-table-block) (opor-import-slope-block)))
   (cond
+    ((not library-ok)
+      (opor-alert "Не удалось обновить блоки slope/table_slope из библиотеки OPOR.")
+      nil)
     ((not (opor-block-exists-p "slope"))
       (opor-alert "Не найден блок уклона slope.")
       nil)
@@ -502,7 +532,7 @@
             (if (= qloop 0)
               (progn
                 (setq table-point
-                  (getpoint "\nУкажите точку верхнего левого угла таблицы: "))
+                  (getpoint "\nУкажите точку нижнего левого угла таблицы: "))
                 (if (not table-point) (setq done T aborted T))))
             (if (not done)
               (progn

@@ -33,3 +33,7 @@ desktop.ini
 # Один раз уже уехал в коммит через "git add -A -- релизы" и был вычищен амендом.
 релизы/OPOR_MONITOR/
 релизы/OPOR_MONITOR.zip
+
+# Inno Setup: временный payload и version include собираются build_installer.ps1
+installer/inno/payload/
+installer/inno/version.generated.iss

@@ -6,6 +6,7 @@
 ;;;  Команды:
 ;;;    DUMPALL    — всё разом (главная: запускать после прогона плагина)
 ;;;    DUMPOPOR   — опоры: всего + разбивка по цветам (=диапазонам высот)
+;;;    DUMPOVERLAP — фактические расстояния между центрами оставшихся опор
 ;;;    DUMPLAG    — лаги: число линий и суммарная длина (мм и м)
 ;;;    DUMPAREA   — площадь: контур, областиvb, и разность (контур-областиvb)
 ;;;    DUMPLAYERS — слои плагина: вкл/выкл + число объектов
@@ -25,25 +26,88 @@
 
 (defun *ad* () (vla-get-ActiveDocument (vlax-get-acad-object)))
 
+(defun dump-variant-list (value)
+  (if (= (type value) 'variant) (setq value (vlax-variant-value value)))
+  (cond
+    ((= (type value) 'safearray) (vlax-safearray->list value))
+    ((= (type value) 'LIST) value)
+    (t '())))
+
+(defun dump-first-attribute-text (obj / raw atts value)
+  (setq raw (vl-catch-all-apply 'vla-GetAttributes (list obj)))
+  (if (vl-catch-all-error-p raw)
+    ""
+    (progn
+      (setq atts (dump-variant-list raw))
+      (if atts
+        (progn
+          (setq value
+            (vl-catch-all-apply 'vla-get-TextString (list (car atts))))
+          (if (vl-catch-all-error-p value) "" value))
+        ""))))
+
 ;; -------- опоры: всего + по цветам ----------------------------------------
-(defun c:dumpopor ( / ss i o col tot tbl found)
+(defun c:dumpopor ( / ss i o col text tot unknown tbl found)
   (setq ss (ssget "_X" '((0 . "INSERT") (8 . "опорыvb")))
-        tot 0 tbl '())
+        tot 0 unknown 0 tbl '())
   (if ss
     (repeat (setq i (sslength ss))
       (setq i   (1- i)
             o   (vlax-ename->vla-object (ssname ss i))
             col (vla-get-Color o)
+            text (dump-first-attribute-text o)
             tot (1+ tot))
+      (if (vl-string-search "?" text)
+        (setq unknown (1+ unknown)))
       (if (setq found (assoc col tbl))
         (setq tbl (subst (cons col (1+ (cdr found))) found tbl))
         (setq tbl (cons (cons col 1) tbl)))))
   (setq tbl (vl-sort tbl '(lambda (a b) (< (car a) (car b)))))
   (princ (strcat "\n--- ОПОРЫ (слой опорыvb) --- ВСЕГО: " (itoa tot)))
   (foreach pr tbl
-    (princ (strcat "\n    цвет " (itoa (car pr)) " : " (itoa (cdr pr)) " шт"
-                   (if (= (car pr) 30) "   <-- ОШИБКА высоты (оранжевый)" ""))))
+    (princ (strcat "\n    цвет " (itoa (car pr)) " : " (itoa (cdr pr)) " шт")))
+  (princ
+    (strcat
+      "\n    неопределённая высота ('?'): " (itoa unknown) " шт"
+      (if (> unknown 0) "   <-- ОШИБКА высоты" "")))
   (if (= tot 0) (princ "  (нет блоков — проверь имя слоя/кодировку)"))
+  (princ))
+
+;; -------- независимая проверка порога перекрытий -------------------------
+(defun dump-support-point (obj / value)
+  (setq value (vl-catch-all-apply 'vla-get-InsertionPoint (list obj)))
+  (if (vl-catch-all-error-p value)
+    nil
+    (dump-variant-list value)))
+
+(defun c:dumpoverlap (/ ss i points obj pt threshold-result threshold min-distance dist violations remaining other)
+  (setq ss (ssget "_X" '((0 . "INSERT") (8 . "опорыvb"))))
+  (setq points '() violations 0 min-distance nil)
+  (if ss
+    (repeat (setq i (sslength ss))
+      (setq i (1- i))
+      (setq obj (vlax-ename->vla-object (ssname ss i)))
+      (setq pt (dump-support-point obj))
+      (if pt (setq points (cons pt points)))))
+  (setq threshold-result
+    (vl-catch-all-apply 'opor-support-overlap-center-distance nil))
+  (setq threshold
+    (if (vl-catch-all-error-p threshold-result) nil threshold-result))
+  (setq remaining points)
+  (while remaining
+    (foreach other (cdr remaining)
+      (setq dist (distance (car remaining) other))
+      (if (or (not min-distance) (< dist min-distance))
+        (setq min-distance dist))
+      (if (and threshold (< dist (- threshold 1e-7)))
+        (setq violations (1+ violations))))
+    (setq remaining (cdr remaining)))
+  (princ
+    (strcat
+      "\n--- ПЕРЕКРЫТИЕ ОПОР --- центров: " (itoa (length points))
+      "  min-distance: " (if min-distance (rtos min-distance 2 3) "-")
+      "  threshold: " (if threshold (rtos threshold 2 3) "-")
+      "  violations: " (itoa violations)))
   (princ))
 
 ;; -------- лаги: число линий + длина ---------------------------------------
@@ -124,5 +188,5 @@
   (princ "\n=====================================")
   (princ))
 
-(princ "\ncheck_dump.lsp загружен. Главная команда: DUMPALL")
+(princ "\ncheck_dump.lsp загружен. Команды: DUMPALL, DUMPOVERLAP")
 (princ)

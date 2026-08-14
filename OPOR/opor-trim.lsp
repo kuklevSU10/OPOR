@@ -27,8 +27,7 @@
 (defun opor-make-line (a b layer object-type / line)
   (setq line (vla-AddLine (opor-ms) (vlax-3d-point a) (vlax-3d-point b)))
   (if layer (vla-put-Layer line layer))
-  (opor-register-created line object-type)
-  line)
+  (opor-register-created line object-type))
 
 (defun opor-trim-line-by-boundaries (line boundary holes object-type / a b layer pts params made t0 t1 mid new)
   (setq a (opor-curve-start line))

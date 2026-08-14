@@ -18,8 +18,7 @@
   (setq pline (vla-AddLightWeightPolyline (opor-ms) arr))
   (vla-put-Closed pline :vlax-true)
   (vla-put-Layer pline *opor-layer-tiles*)
-  (opor-register-created pline "tile")
-  pline)
+  (opor-register-created pline "tile"))
 
 ;; регион из замкнутой кривой; nil при неудаче. Временный - НЕ регистрируется
 ;; (финальные регионы-плитки регистрируются в момент, когда становятся плиткой)
@@ -160,15 +159,15 @@
                 ;; распад: куски explode = регионы-плитки, исходный регион удаляется
                 (foreach r lst
                   (vla-put-Layer r *opor-layer-tiles*)
-                  (opor-register-created r "tile-region")
-                  (setq regions (cons r regions)))
+                  (setq r (opor-register-created r "tile-region"))
+                  (if r (setq regions (cons r regions))))
                 (opor-tile-delete-quiet creg))
               (progn
                 ;; один кусок: creg сам становится плиткой, explode-кривые удаляются
                 (foreach e lst (opor-tile-delete-quiet e))
                 (vla-put-Layer creg *opor-layer-tiles*)
-                (opor-register-created creg "tile-region")
-                (setq regions (cons creg regions))))
+                (setq creg (opor-register-created creg "tile-region"))
+                (if creg (setq regions (cons creg regions)))))
             (opor-delete-object pline)
             (opor-unregister-created pline))))
       ;; нет пересечения с контуром: по центру - внутри или вне
@@ -212,8 +211,8 @@
             ((> (- area-old area-new) *opor-vba-tile-trim-area-tolerance*)
               ;; обрезалась: полилиния -> регион
               (vla-put-Layer preg *opor-layer-tiles*)
-              (opor-register-created preg "tile-region")
-              (setq regions (cons preg regions))
+              (setq preg (opor-register-created preg "tile-region"))
+              (if preg (setq regions (cons preg regions)))
               (opor-delete-object pline)
               (opor-unregister-created pline))
             (t

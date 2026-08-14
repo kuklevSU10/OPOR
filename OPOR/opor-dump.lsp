@@ -1,24 +1,5 @@
 ;;; OPOR diagnostics for objects created by the clean LISP port.
 
-(defun opor-object-xdata-info (obj / en data app values)
-  (setq en (vlax-vla-object->ename obj))
-  (if en
-    (progn
-      (setq data (entget en (list *opor-xdata-app*)))
-      (setq app (cadr (assoc -3 data)))
-      (if (and app (= (car app) *opor-xdata-app*))
-        (progn
-          (setq values
-            (vl-remove-if-not
-              '(lambda (item) (and (listp item) (= (car item) 1000)))
-              (cdr app)))
-          (list
-            (cons 'type (if (nth 0 values) (cdr (nth 0 values)) "unknown"))
-            (cons 'version (if (nth 1 values) (cdr (nth 1 values)) "unknown"))
-            (cons 'session (if (nth 2 values) (cdr (nth 2 values)) "legacy"))))
-        nil))
-    nil))
-
 (defun opor-object-xdata-type (obj / info)
   (setq info (opor-object-xdata-info obj))
   (if info (cdr (assoc 'type info)) nil))
@@ -226,6 +207,12 @@
         (itoa (opor-dump-session-int 'support-border-count))
         " nodes="
         (itoa (opor-dump-session-int 'support-node-count))
+        " curve-samples-excluded="
+        (itoa (opor-dump-session-int 'support-excluded-curve-vertex-count))
+        " overlap-removed="
+        (itoa (opor-dump-session-int 'support-overlap-deduped))
+        " overlap-center-distance="
+        (rtos (opor-dump-session-real 'support-overlap-center-distance) 2 2)
         "\n    border filter: raw="
         (itoa (opor-dump-session-int 'support-raw-border-count))
         " after-vertices="

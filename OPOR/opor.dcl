@@ -85,8 +85,10 @@ opor_params : dialog {
         : radio_button { key = "cov_d"; label = "Доска"; }
         : radio_button { key = "cov_p"; label = "Плитка"; }
       }
-      : edit_box { key = "doska";  label = "толщина доски";  edit_width = 6; }
-      : edit_box { key = "lag";    label = "толщина лага";   edit_width = 6; }
+      : edit_box { key = "boardwidth"; label = "ширина доски";  edit_width = 6; }
+      : edit_box { key = "doska";      label = "толщина доски"; edit_width = 6; }
+      : edit_box { key = "lagwidth";   label = "ширина лаги";   edit_width = 6; }
+      : edit_box { key = "lag";        label = "высота лаги";   edit_width = 6; }
       : edit_box { key = "plitka"; label = "толщина плитки"; edit_width = 6; }
       : edit_box { key = "boardlen"; label = "длина доски"; edit_width = 7; }
       : popup_list { key = "boardlayout"; label = "раскладка"; edit_width = 12; }

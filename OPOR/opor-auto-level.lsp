@@ -43,8 +43,7 @@
     nil
     (progn
       (setq block value)
-      (opor-register-created block "auto-level-mark")
-      block)))
+      (opor-register-created block "auto-level-mark"))))
 
 (defun opor-auto-level-run (/ boundary polylines vertices points count block pline pt)
   (cond

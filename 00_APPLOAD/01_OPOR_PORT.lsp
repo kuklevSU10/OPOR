@@ -1,6 +1,21 @@
 (vl-load-com)
 
-(defun opor-appload-project-root (/ source launcher-dir loader selected)
+(defun opor-appload-remembered-project-root (/ value)
+  (setq value
+    (vl-catch-all-apply
+      'vl-registry-read
+      (list "HKEY_CURRENT_USER\\Software\\OPOR" "Root")))
+  (if (and (not (vl-catch-all-error-p value)) (= (type value) 'STR))
+    (progn
+      (setq value (vl-string-right-trim "\\/" value))
+      (cond
+        ((findfile (strcat value "\\opor-loader.lsp"))
+          (vl-filename-directory value))
+        ((findfile (strcat value "\\OPOR\\opor-loader.lsp")) value)
+        (T nil)))
+    nil))
+
+(defun opor-appload-project-root (/ source launcher-dir remembered loader selected)
   (setq source
     (cond
       ((and (boundp '*load-truename*) *load-truename*) *load-truename*)
@@ -11,6 +26,7 @@
           *opor-appload-root*
           (findfile (strcat *opor-appload-root* "\\OPOR\\opor-loader.lsp")))
       *opor-appload-root*)
+    ((setq remembered (opor-appload-remembered-project-root)) remembered)
     (source
       (setq launcher-dir (vl-filename-directory source))
       (vl-filename-directory launcher-dir))

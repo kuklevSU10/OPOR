@@ -192,6 +192,174 @@
     (opor-block-exists-p *opor-new-tile-params-block*)
     (opor-block-exists-p *opor-new-board-params-block*)))
 
+(defun opor-block-collection-item (blocks name / value)
+  (setq value (vl-catch-all-apply 'vla-Item (list blocks name)))
+  (if (vl-catch-all-error-p value) nil value))
+
+(defun opor-block-entity-list (block / item result)
+  (setq result '())
+  (vlax-for item block
+    (setq result (cons item result)))
+  (reverse result))
+
+(defun opor-block-entity-array (block / array count index item)
+  (setq count (vla-get-Count block))
+  (if (> count 0)
+    (progn
+      (setq array
+        (vlax-make-safearray vlax-vbObject (cons 0 (1- count))))
+      (setq index 0)
+      ;; Сначала заканчиваем обход коллекции, и только затем вызываем
+      ;; CopyObjects: одновременные чтение и запись коллекции COM запрещены.
+      (foreach item (opor-block-entity-list block)
+        (vlax-safearray-put-element array index item)
+        (setq index (1+ index)))
+      array)
+    nil))
+
+(defun opor-copy-block-contents (source-db source-block target-block / array copied)
+  (setq array (opor-block-entity-array source-block))
+  (if array
+    (setq copied
+      (vl-catch-all-apply
+        'vla-CopyObjects (list source-db array target-block)))
+    (setq copied T))
+  (and
+    (not (vl-catch-all-error-p copied))
+    (= (vla-get-Count target-block) (vla-get-Count source-block))))
+
+(defun opor-delete-block-contents (block / deleted item ok)
+  (setq ok T)
+  (foreach item (opor-block-entity-list block)
+    (setq deleted (vl-catch-all-apply 'vla-Delete (list item)))
+    (if (vl-catch-all-error-p deleted) (setq ok nil)))
+  (and ok (= (vla-get-Count block) 0)))
+
+(defun opor-temp-block-name (/ index name)
+  (setq index 1 name "$OPOR$BLOCK_BACKUP")
+  (while (opor-block-exists-p name)
+    (setq name (strcat "$OPOR$BLOCK_BACKUP_" (itoa index))
+          index (1+ index)))
+  name)
+
+(defun opor-delete-temp-block (block / deleted)
+  (opor-delete-block-contents block)
+  (setq deleted (vl-catch-all-apply 'vla-Delete (list block)))
+  (not (vl-catch-all-error-p deleted)))
+
+;; Обновляем содержимое существующего определения на месте. Поэтому все уже
+;; вставленные ссылки продолжают смотреть на тот же BlockTableRecord. Перед
+;; очисткой делаем временную копию и восстанавливаем её при любой ошибке.
+(defun opor-replace-block-definition
+  (source-db source-block target-block / doc blocks backup backup-name added ok restored)
+  (setq doc (opor-doc)
+        blocks (vla-get-Blocks doc)
+        backup-name (opor-temp-block-name))
+  (setq added
+    (vl-catch-all-apply
+      'vla-Add (list blocks (vla-get-Origin target-block) backup-name)))
+  (if (vl-catch-all-error-p added)
+    nil
+    (progn
+      (setq backup added)
+      (if (not (opor-copy-block-contents doc target-block backup))
+        (progn
+          (opor-delete-temp-block backup)
+          nil)
+        (progn
+          (setq ok
+            (and
+              (opor-delete-block-contents target-block)
+              (opor-copy-block-contents source-db source-block target-block)))
+          (if (not ok)
+            (progn
+              (opor-delete-block-contents target-block)
+              (setq restored
+                (opor-copy-block-contents doc backup target-block))
+              (if (not restored)
+                (opor-log
+                  (strcat "КРИТИЧНО: не восстановлено определение блока "
+                    (vla-get-Name target-block) ".")))))
+          (opor-delete-temp-block backup)
+          ok)))))
+
+(defun opor-create-library-block-definition
+  (source-db source-block blocks name / target added ok)
+  (setq added
+    (vl-catch-all-apply
+      'vla-Add (list blocks (vla-get-Origin source-block) name)))
+  (if (vl-catch-all-error-p added)
+    nil
+    (progn
+      (setq target added
+            ok (opor-copy-block-contents source-db source-block target))
+      (if (not ok) (opor-delete-temp-block target))
+      ok)))
+
+(defun opor-open-table-library-db (path / app progid dbx opened)
+  (setq app (vlax-get-acad-object)
+        progid
+          (strcat "ObjectDBX.AxDbDocument."
+            (substr (getvar "ACADVER") 1 2)))
+  (if app
+    (setq dbx
+      (vl-catch-all-apply
+        'vla-GetInterfaceObject (list app progid))))
+  (if (or (not dbx) (vl-catch-all-error-p dbx))
+    (setq dbx (vl-catch-all-apply 'vlax-create-object (list progid))))
+  (if (or (not dbx) (vl-catch-all-error-p dbx))
+    nil
+    (progn
+      (setq opened
+        (vl-catch-all-apply 'vlax-invoke-method (list dbx 'Open path)))
+      (if (vl-catch-all-error-p opened)
+        (progn (vlax-release-object dbx) nil)
+        dbx))))
+
+;; DWG-библиотека является единственным источником истины. Наличие блока с тем
+;; же именем в текущем чертеже больше не означает, что он актуален.
+(defun opor-refresh-library-blocks (names description / path dbx source-blocks target-blocks source target name ok count)
+  (setq path (opor-table-block-library-path)
+        ok T
+        count 0)
+  (cond
+    ((not path)
+      (opor-log
+        (strcat "Не найдена библиотека блоков: " *opor-table-block-library*))
+      nil)
+    ((not (setq dbx (opor-open-table-library-db path)))
+      (opor-log "Не удалось открыть DWG-библиотеку блоков через ObjectDBX.")
+      nil)
+    (T
+      (setq source-blocks (vla-get-Blocks dbx)
+            target-blocks (vla-get-Blocks (opor-doc)))
+      (foreach name names
+        (setq source (opor-block-collection-item source-blocks name)
+              target (opor-block-collection-item target-blocks name))
+        (cond
+          ((not source)
+            (setq ok nil)
+            (opor-log (strcat "В библиотеке отсутствует блок " name ".")))
+          ((<= (vla-get-Count source) 0)
+            (setq ok nil)
+            (opor-log (strcat "В библиотеке пустое определение блока " name ".")))
+          ((if target
+             (opor-replace-block-definition dbx source target)
+             (opor-create-library-block-definition
+               dbx source target-blocks name))
+            (setq count (1+ count)))
+          (T
+            (setq ok nil)
+            (opor-log (strcat "Не удалось обновить блок " name ".")))))
+      (vlax-release-object dbx)
+      (if ok
+        (progn
+          (vl-catch-all-apply 'vla-Regen (list (opor-doc) 1))
+          (opor-log
+            (strcat description ": актуальные определения из библиотеки, "
+              (itoa count) " шт."))))
+      ok)))
+
 (defun opor-table-block-library-path (/ path)
   (setq path
     (if (and (boundp '*opor-root*) *opor-root*)
@@ -224,88 +392,119 @@
 
 ;; Блок отметки используется не только геологией: он нужен команде +0.000
 ;; и обратному расчёту отметок. Поэтому его импорт относится к базовому модулю.
-(defun opor-import-level-block (/ path imported)
-  (if (opor-block-exists-p *opor-level-block-name*)
-    T
-    (progn
-      (setq path (opor-table-block-library-path))
-      (if path
-        (progn
-          (setq imported
-            (vl-catch-all-apply
-              '(lambda ()
-                 (vla-InsertBlock
-                   (opor-ms) (vlax-3d-point '(0.0 0.0 0.0)) path
-                   1.0 1.0 1.0 0.0))
-              nil))
-          (if (not (vl-catch-all-error-p imported))
-            (vl-catch-all-apply 'vla-Delete (list imported)))
-          (if (not (opor-block-exists-p *opor-level-block-name*))
-            (opor-import-block-library-command path))))
-      (if (opor-block-exists-p *opor-level-block-name*)
-        (progn
-          (opor-log "Блок otmetka_oporvb загружен из библиотеки.")
-          T)
-        nil))))
+(defun opor-import-level-block ()
+  (and
+    (opor-refresh-library-blocks
+      (list *opor-level-block-name*) "Блок отметки")
+    (opor-block-exists-p *opor-level-block-name*)))
 
-(defun opor-import-new-table-blocks (/ path imported)
-  (if (opor-new-table-blocks-ready-p)
-    T
-    (progn
-      (setq path (opor-table-block-library-path))
-      (if path
+;; Рабочий символ уклона нужен TIN, +0.000 и командам Slope даже в чистом DWG.
+;; Держим его в общей переносимой библиотеке рядом с блоком отметки.
+(defun opor-import-slope-block ()
+  (and
+    (opor-refresh-library-blocks
+      (list "slope") "Блок уклона")
+    (opor-block-exists-p "slope")))
+
+;; Блоки опор могли отсутствовать только в чистом acad.dwt. Уже существующие
+;; определения пользователя не перезаписываем; из библиотеки добавляем лишь
+;; недостающие, чтобы OPOR не зависел от специального шаблона.
+(defun opor-import-missing-library-blocks
+  (names description / path dbx source-blocks target-blocks source name ok count)
+  (setq path (opor-table-block-library-path)
+        ok T
+        count 0)
+  (cond
+    ((not path)
+      (opor-log
+        (strcat "Не найдена библиотека блоков: " *opor-table-block-library*))
+      nil)
+    ((not (setq dbx (opor-open-table-library-db path)))
+      (opor-log "Не удалось открыть DWG-библиотеку блоков через ObjectDBX.")
+      nil)
+    (T
+      (setq source-blocks (vla-get-Blocks dbx)
+            target-blocks (vla-get-Blocks (opor-doc)))
+      (foreach name names
+        (if (not (opor-block-collection-item target-blocks name))
+          (progn
+            (setq source (opor-block-collection-item source-blocks name))
+            (cond
+              ((not source)
+                (setq ok nil)
+                (opor-log (strcat "В библиотеке отсутствует блок " name ".")))
+              ((<= (vla-get-Count source) 0)
+                (setq ok nil)
+                (opor-log (strcat "В библиотеке пустое определение блока " name ".")))
+              ((opor-create-library-block-definition
+                 dbx source target-blocks name)
+                (setq count (1+ count)))
+              (T
+                (setq ok nil)
+                (opor-log (strcat "Не удалось импортировать блок " name ".")))))))
+      (vlax-release-object dbx)
+      (if (and ok (> count 0))
         (progn
-          (setq imported
-            (vl-catch-all-apply
-              'vla-InsertBlock
-              (list (opor-ms) (vlax-3d-point '(0.0 0.0 0.0)) path
-                    1.0 1.0 1.0 0.0)))
-          (if (not (vl-catch-all-error-p imported))
-            (vl-catch-all-apply 'vla-Delete (list imported))))
-        (opor-log (strcat "Не найдена библиотека новых таблиц: " *opor-table-block-library*)))
-      (if (opor-new-table-blocks-ready-p)
-        (progn (opor-log "Блоки новых таблиц 3D/PRO загружены.") T)
-        (progn (opor-log "Новые таблицы 3D/PRO не загружены; будет использована старая таблица.") nil)))))
+          (vl-catch-all-apply 'vla-Regen (list (opor-doc) 1))
+          (opor-log
+            (strcat description ": добавлено из библиотеки, "
+              (itoa count) " шт."))))
+      ok)))
+
+(defun opor-support-blocks-ready-p (/ ok pair)
+  (setq ok T)
+  (foreach pair *opor-block-by-line*
+    (if (not (opor-block-exists-p (cdr pair)))
+      (setq ok nil)))
+  ok)
+
+(defun opor-import-support-blocks ()
+  (and
+    (opor-import-missing-library-blocks
+      (mapcar 'cdr *opor-block-by-line*) "Блоки опор Level/3D/PRO")
+    (opor-support-blocks-ready-p)))
+
+(defun opor-import-new-table-blocks ()
+  (and
+    (opor-refresh-library-blocks
+      (list
+        *opor-new-3d-support-table-block*
+        *opor-new-pro-support-table-block*
+        *opor-new-tile-params-block*
+        *opor-new-board-params-block*)
+      "Блоки новых таблиц 3D/PRO")
+    (opor-new-table-blocks-ready-p)))
 
 ;; Клиентский визуал table_slope хранится в той же переносимой DWG-библиотеке,
 ;; но не участвует в готовности основных таблиц 3D/PRO. Поэтому старые пакеты
 ;; без этого определения по-прежнему могут считать A/B, а Slope при необходимости
 ;; отдельно пытается дозагрузить именно свою таблицу.
-(defun opor-import-slope-table-block (/ path imported)
-  (if (opor-block-exists-p "table_slope")
-    T
-    (progn
-      (setq path (opor-table-block-library-path))
-      (if path
-        (progn
-          (setq imported
-            (vl-catch-all-apply
-              'vla-InsertBlock
-              (list (opor-ms) (vlax-3d-point '(0.0 0.0 0.0)) path
-                    1.0 1.0 1.0 0.0)))
-          (if (not (vl-catch-all-error-p imported))
-            (vl-catch-all-apply 'vla-Delete (list imported))))
-        (opor-log
-          (strcat "Не найдена библиотека таблицы slope: "
-            *opor-table-block-library*)))
-      (if (opor-block-exists-p "table_slope")
-        (progn
-          (opor-log "Клиентский блок table_slope загружен из библиотеки.")
-          T)
-        (progn
-          (opor-log "Клиентский блок table_slope не загружен.")
-          nil)))))
+(defun opor-import-slope-table-block ()
+  (and
+    (opor-refresh-library-blocks
+      (list "table_slope") "Клиентский блок table_slope")
+    (opor-block-exists-p "table_slope")))
 
-(defun opor-set-attribute-values (block values / raw atts tag pair)
+(defun opor-set-attribute-values (block values / raw atts att tag pair value ok)
   (setq raw (vl-catch-all-apply 'vla-GetAttributes (list block)))
-  (if (not (vl-catch-all-error-p raw))
+  (if (vl-catch-all-error-p raw)
+    nil
     (progn
-      (setq atts (opor-variant-list raw))
+      (setq atts (opor-variant-list raw) ok (if atts T nil))
       (foreach att atts
-        (setq tag (strcase (vla-get-TagString att)))
-        (setq pair (assoc tag values))
-        (if pair
-          (vla-put-TextString att (cdr pair)))))))
+        (setq value (vl-catch-all-apply 'vla-get-TagString (list att)))
+        (if (vl-catch-all-error-p value)
+          (setq ok nil)
+          (progn
+            (setq tag (strcase value))
+            (setq pair (assoc tag values))
+            (if pair
+              (progn
+                (setq value
+                  (vl-catch-all-apply 'vla-put-TextString
+                    (list att (cdr pair))))
+                (if (vl-catch-all-error-p value) (setq ok nil)))))))
+      ok)))
 
 (defun opor-block-reference-attribute-count (block / raw)
   (setq raw (vl-catch-all-apply 'vla-GetAttributes (list block)))
@@ -475,7 +674,7 @@
 ;; команду на последнем шаге, уже после расчёта всех контуров сессии.
 ;; Регистрацию объекта делает вызывающий: в новых таблицах блок сначала
 ;; проверяется по числу атрибутов и при несовпадении удаляется без регистрации.
-(defun opor-table-insert-block-safe (pt block-name / block)
+(defun opor-table-insert-block-safe (pt block-name / block layer-result)
   (setq block
     (vl-catch-all-apply 'vla-InsertBlock
       (list (opor-ms) (vlax-3d-point pt) block-name 1.0 1.0 1.0 0.0)))
@@ -485,7 +684,18 @@
         (strcat "Не удалось вставить блок таблицы " (opor-string block-name)
                 ": " (vl-catch-all-error-message block)))
       nil)
-    block))
+    (progn
+      (setq layer-result
+        (vl-catch-all-apply 'vla-put-Layer
+          (list block *opor-layer-tables*)))
+      (if (vl-catch-all-error-p layer-result)
+        (progn
+          (opor-log
+            (strcat "Не удалось назначить таблице " (opor-string block-name)
+                    " слой 0: " (vl-catch-all-error-message layer-result)))
+          (vl-catch-all-apply 'vla-Delete (list block))
+          nil)
+        block))))
 
 (defun opor-insert-legacy-total-table (session / line block-name pt block area qop gridlen step-x step-y support-index values counts variable-p tile-mode zfloor floor-out)
   (setq line (opor-session-get 'line))
@@ -494,7 +704,6 @@
   (if (and block-name pt (opor-block-exists-p block-name)
            (setq block (opor-table-insert-block-safe pt block-name)))
     (progn
-      (opor-register-created block "table")
       (setq area (opor-session-get 'area))
       (setq gridlen (opor-session-get 'lag-length-m))
       (setq step-x (opor-session-get 'step-x))
@@ -534,8 +743,13 @@
           (if variable-p
             (opor-number-tag-values-from-counts counts)
             (opor-number-tag-values support-index qop))))
-      (opor-set-attribute-values block values)
-      block)
+      (if (and (opor-set-attribute-values block values)
+               (opor-register-created block "table"))
+        block
+        (progn
+          (opor-delete-object block)
+          (opor-log "Итоговая legacy-таблица не заполнена или не помечена XData OPOR.")
+          nil)))
     (progn
       (opor-log (strcat "Итоговая таблица не вставлена: не найден блок " (opor-string block-name)))
       nil)))
@@ -621,14 +835,10 @@
         (opor-new-table-dim-text thickness) "×"
         (opor-new-table-dim-text (opor-new-table-number 'board-length))))))
 
-(defun opor-new-table-lag-type-text (/ lagf prefix)
-  (setq lagf (opor-session-get 'lag-fastener))
-  (setq prefix
-    (if (opor-fastener-name-has-p lagf "TOP")
-      "Своя лага "
-      "Frame "))
+(defun opor-new-table-lag-type-text ()
+  ;; Уточнение заказчика 13.08.2026: любая лага называется Frame.
   (strcat
-    prefix
+    "Frame "
     (opor-new-table-dim-text (opor-new-table-number 'lag-width)) "×"
     (opor-new-table-dim-text (opor-new-table-number 'lag-thickness))
     "мм"))
@@ -809,9 +1019,65 @@
           (setq obj (entnext obj))))))
   count)
 
+(defun opor-extra-row-line-equal-p (line expected / a b ea eb)
+  (setq a (car line) b (cadr line) ea (car expected) eb (cadr expected))
+  (or
+    (and (equal a ea 1e-6) (equal b eb 1e-6))
+    (and (equal a eb 1e-6) (equal b ea 1e-6))))
+
+(defun opor-extra-row-definition-valid-p (/ block obj data lines attrs expected item)
+  (setq block (tblobjname "BLOCK" *opor-new-extra-row-block*))
+  (setq lines '() attrs '())
+  (if block
+    (progn
+      (setq obj (entnext block))
+      (while obj
+        (setq data (entget obj))
+        (cond
+          ((= (cdr (assoc 0 data)) "LINE")
+            (setq lines
+              (cons
+                (list (opor-2d (cdr (assoc 10 data)))
+                      (opor-2d (cdr (assoc 11 data))))
+                lines)))
+          ((= (cdr (assoc 0 data)) "ATTDEF")
+            (setq attrs
+              (cons
+                (cons (strcase (cdr (assoc 2 data)))
+                      (opor-2d (cdr (assoc 11 data))))
+                attrs))))
+        (if (= (cdr (assoc 0 data)) "ENDBLK")
+          (setq obj nil)
+          (setq obj (entnext obj))))))
+  (setq expected
+    (list
+      (list '(0.0 0.0 0.0) '(10000.0 0.0 0.0))
+      (list '(0.0 -800.0 0.0) '(10000.0 -800.0 0.0))
+      (list '(0.0 0.0 0.0) '(0.0 -800.0 0.0))
+      (list '(5500.0 0.0 0.0) '(5500.0 -800.0 0.0))
+      (list '(10000.0 0.0 0.0) '(10000.0 -800.0 0.0))))
+  (and
+    (= (length lines) 5)
+    (= (length attrs) 2)
+    (vl-every
+      '(lambda (item)
+         (vl-some
+           '(lambda (line) (opor-extra-row-line-equal-p line item))
+           lines))
+      expected)
+    (assoc "LABEL" attrs)
+    (equal (cdr (assoc "LABEL" attrs)) '(2750.0 -400.0 0.0) 1e-6)
+    (assoc "VALUE" attrs)
+    (equal (cdr (assoc "VALUE" attrs)) '(7750.0 -400.0 0.0) 1e-6)))
+
 (defun opor-ensure-extra-row-block (/ style made)
   (if (opor-block-exists-p *opor-new-extra-row-block*)
-    (= (opor-block-definition-attribute-count *opor-new-extra-row-block*) 2)
+    (if (opor-extra-row-definition-valid-p)
+      T
+      (progn
+        (opor-log
+          "Блок OPOR_PARAMS_EXTRA_ROW не совпадает с канонической геометрией; новая таблица не используется.")
+        nil))
     (progn
       (setq style (opor-extra-row-text-style))
       (setq made
@@ -838,8 +1104,7 @@
               (100 . "AcDbEntity")
               (8 . "0")
               (100 . "AcDbBlockEnd")))))
-      (if (/= (opor-block-definition-attribute-count
-                *opor-new-extra-row-block*) 2)
+      (if (not (opor-extra-row-definition-valid-p))
         (progn
           (opor-log "Не удалось создать блок дополнительной строки таблицы.")
           nil)
@@ -847,7 +1112,7 @@
 
 (defun opor-new-param-fastener-row (name qty)
   (cons
-    (strcat "Кол-во креплений " name)
+    (strcat "Кол-во " name)
     (opor-table-nonzero-int-text qty)))
 
 ;; Новые примеры заказчика задают не один фиксированный блок, а компоновку строк
@@ -873,19 +1138,25 @@
       (cons "Периметр объекта, м"
         (opor-table-nonzero-real-text (/ perimeter 1000.0) 2))
       (cons "Параметры финишного покрытия"
-        (opor-new-table-covering-text tile-mode tile-x tile-y))
-      (cons "Кол-во плитки с подрезкой"
-        (if (= tile-mode "p")
-          (opor-table-nonzero-int-text (opor-tiles-qr)) ""))
-      (cons "Кол-во плитки без подрезки"
-        (if (= tile-mode "p")
-          (opor-table-nonzero-int-text (opor-tiles-qc)) ""))
-      (cons "Кол-во доски с подрезкой"
-        (if (= tile-mode "d")
-          (opor-table-nonzero-int-text (opor-boards-qr)) ""))
-      (cons "Кол-во доски без подрезки"
-        (if (= tile-mode "d")
-          (opor-table-nonzero-int-text (opor-boards-qc)) ""))))
+        (opor-new-table-covering-text tile-mode tile-x tile-y))))
+  ;; Не вставляем заведомо неприменимые пустые блоки: в таблице доски нет строк
+  ;; плитки, в таблице плитки нет строк доски. Нулевое применимое значение по
+  ;; прежнему согласованию остаётся пустой ячейкой в строке своего материала.
+  (if (= tile-mode "p")
+    (setq rows
+      (append rows
+        (list
+          (cons "Кол-во плитки с подрезкой"
+            (opor-table-nonzero-int-text (opor-tiles-qr)))
+          (cons "Кол-во плитки без подрезки"
+            (opor-table-nonzero-int-text (opor-tiles-qc))))))
+    (setq rows
+      (append rows
+        (list
+          (cons "Кол-во доски с подрезкой"
+            (opor-table-nonzero-int-text (opor-boards-qr)))
+          (cons "Кол-во доски без подрезки"
+            (opor-table-nonzero-int-text (opor-boards-qc)))))))
   (if (opor-floor-uses-lag-param-table-p)
     (setq rows
       (append rows
@@ -918,40 +1189,51 @@
       (cons "Отметка чистого пола, мм"
         (opor-new-table-floor-text variable-p)))))
 
-(defun opor-insert-extra-row (pt label value layer / block)
+(defun opor-insert-extra-row (pt label value / block)
   (if (opor-ensure-extra-row-block)
     (progn
       (setq block
-        (vl-catch-all-apply 'vla-InsertBlock
-          (list (opor-ms) (vlax-3d-point pt)
-            *opor-new-extra-row-block* 1.0 1.0 1.0 0.0)))
-      (if (vl-catch-all-error-p block)
+        (opor-table-insert-block-safe pt *opor-new-extra-row-block*))
+      (if (not block)
         nil
-        (progn
-          (if layer (vl-catch-all-apply 'vla-put-Layer (list block layer)))
-          (opor-register-created block "table-extra-row")
-          (opor-set-attribute-values block
-            (list (cons "LABEL" label) (cons "VALUE" value)))
-          block)))
+        (if (and
+              (opor-set-attribute-values block
+                (list (cons "LABEL" label) (cons "VALUE" value)))
+              (opor-register-created block "table-extra-row"))
+          block
+          (progn
+            (opor-delete-object block)
+            nil))))
     nil))
 
-(defun opor-insert-new-param-table-rows (params-pt layer variable-p / y z rows pair inserted row)
+(defun opor-table-delete-created (objects / count obj)
+  (setq count 0)
+  (foreach obj objects
+    (if (opor-delete-object obj)
+      (progn
+        (opor-unregister-created obj)
+        (setq count (1+ count)))))
+  count)
+
+(defun opor-insert-new-param-table-rows (params-pt variable-p / y z rows pair objects failures row)
   (setq y (cadr params-pt))
   (setq z (if (caddr params-pt) (caddr params-pt) 0.0))
-  (setq rows (opor-new-param-row-values variable-p) inserted 0)
+  (setq rows (opor-new-param-row-values variable-p) objects '() failures 0)
   (foreach pair rows
     (setq row
       (opor-insert-extra-row (list (car params-pt) y z)
-        (car pair) (cdr pair) layer))
-    (if row (setq inserted (1+ inserted)))
+        (car pair) (cdr pair)))
+    (if row
+      (setq objects (cons row objects))
+      (setq failures (1+ failures)))
     (setq y (- y *opor-new-extra-row-height*)))
-  (if (/= inserted (length rows))
+  (if (> failures 0)
     (opor-log
       (strcat "Добавлено строк таблицы параметров: "
-        (itoa inserted) " из " (itoa (length rows)) ".")))
-  inserted)
+        (itoa (length objects)) " из " (itoa (length rows)) ".")))
+  (list (reverse objects) failures (length rows)))
 
-(defun opor-insert-new-support-tables (session line / pt params-pt support-block support-name support-tags params-offset qop support-index counts variable-p layer)
+(defun opor-insert-new-support-tables (session line / pt params-pt support-block support-name support-tags params-offset qop support-index counts variable-p row-result row-objects row-failures)
   (setq pt (opor-session-get 'table-point))
   (if (and pt (opor-import-new-table-blocks))
     (progn
@@ -970,7 +1252,6 @@
                (= (opor-block-reference-attribute-count support-block)
                   (1+ (length support-tags))))
         (progn
-          (opor-register-created support-block "table-support")
           (setq support-index (opor-session-get 'support-index)
                 counts (opor-session-get 'support-counts)
                 variable-p (= (opor-session-get 'mode) "var-height"))
@@ -979,13 +1260,29 @@
               (opor-counts-total counts)
               (opor-session-get 'support-count)))
           (if (not (numberp qop)) (setq qop 0))
-          (opor-set-attribute-values support-block
-            (opor-new-support-values support-tags qop counts support-index variable-p))
-          (setq layer
-            (vl-catch-all-apply 'vla-get-Layer (list support-block)))
-          (if (vl-catch-all-error-p layer) (setq layer nil))
-          (opor-insert-new-param-table-rows params-pt layer variable-p)
-          support-block)
+          (if (and
+                (opor-set-attribute-values support-block
+                  (opor-new-support-values support-tags qop counts support-index variable-p))
+                (opor-register-created support-block "table-support"))
+            (progn
+              (setq row-result
+                (opor-insert-new-param-table-rows params-pt variable-p))
+              (setq row-objects (car row-result) row-failures (cadr row-result))
+              (if (= row-failures 0)
+                support-block
+                (progn
+                  (opor-table-delete-created row-objects)
+                  (opor-table-delete-created (list support-block))
+                  (opor-log
+                    (strcat "Новые таблицы " line
+                      " откачены: вставлены не все строки параметров."))
+                  nil)))
+            (progn
+              (opor-delete-object support-block)
+              (opor-log
+                (strcat "Новая таблица " line
+                  " не заполнена или не помечена XData OPOR."))
+              nil)))
         (progn
           ;; При сбое вставки причина уже записана в opor-table-insert-block-safe;
           ;; удалять и повторять сообщение про атрибуты тогда нечего.

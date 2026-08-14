@@ -7,26 +7,37 @@
 ## Как пересобрать
 
 Нужен [Inno Setup 6](https://jrsoftware.org/isdl.php).
+Сборщик поддерживает как системную установку в `Program Files`, так и
+пользовательскую установку `winget` в `%LOCALAPPDATA%\Programs\Inno Setup 6`.
 
-1. Собрать payload — ровно то, что уходит в bundle (28 файлов):
+Из каталога `installer/inno` запустить:
 
-   ```
-   payload/
-     PackageContents.xml            <- installer/autoload/PackageContents.xml
-     Contents/
-       OPOR_bootstrap.lsp           <- installer/autoload/OPOR_bootstrap.lsp
-       OPOR/                        <- всё содержимое OPOR/ (24 .lsp + opor.dcl
-                                       + opor-table-blocks.dwg)
-   ```
+```powershell
+.\build_installer.ps1
+```
 
-2. Положить рядом с `OPOR_Setup.iss` папку `payload` и файл
-   `after_install.txt`, затем:
+Скрипт сам берёт канонические файлы из корневой `OPOR/`, проверяет обязательную
+DWG-библиотеку, формирует `payload` и получает текущую версию (сейчас 3.35.0) из
+`*opor-version*` в `OPOR/opor-config.lsp`. Ручное копирование payload и правка
+версии в `.iss` больше не нужны. Во временной staging-папке находятся 27 файлов:
+bootstrap и 26 файлов `OPOR`; установленный bundle содержит ещё сгенерированный
+`PackageContents.xml`, итого 28.
 
-   ```
-   "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" OPOR_Setup.iss
-   ```
+Для проверки состава без компиляции:
 
-   Результат — `output\OPOR_Setup_<версия>.exe`.
+```powershell
+.\build_installer.ps1 -StageOnly
+```
+
+Удалить временные staging-файлы:
+
+```powershell
+.\build_installer.ps1 -Clean
+```
+
+При полной сборке нужен `ISCC.exe`; результат —
+`output\OPOR_Setup_<версия>.exe`. По умолчанию временный payload удаляется после
+успешной компиляции; `-KeepPayload` сохраняет его для ручной проверки.
 
 ## Выбор версий AutoCAD
 
@@ -86,7 +97,7 @@ AutoCAD 2021 и Civil 3D 2021). Разделить их галочками не�
 ## Тихая установка (для массовой раскатки)
 
 ```
-OPOR_Setup_3.32.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+OPOR_Setup_3.35.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
 ```
 
 Лог установки: добавить `/LOG="путь\install.log"`. В логе есть строки
@@ -97,17 +108,17 @@ OPOR_Setup_3.32.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
 
 ## При смене версии
 
-Номер задаётся в двух местах и должен совпадать:
-
-- `installer/autoload/PackageContents.xml` — `AppVersion` и `FriendlyVersion`;
-- `OPOR_Setup.iss` — `#define MyAppVersion`.
+Номер установщика автоматически выводится скриптом сборки из
+`*opor-version*` в `OPOR/opor-config.lsp` и записывается во временный
+`version.generated.iss`. Ручной `PackageContents.xml` используется только
+альтернативными способами установки и на Inno-сборку не влияет.
 
 `AppId` (GUID) менять **нельзя** — по нему Windows находит прошлую
 установку для обновления и удаления.
 
 ## Что проверено
 
-Прогонами на этой машине (без AutoCAD, только установка/удаление):
+Историческими прогонами старой сборки на этой машине были проверены:
 
 - чистая установка, установка поверх, удаление, повторная установка;
 - удаление четырёх подставных «старых копий» разом — двух в профиле
@@ -116,6 +127,9 @@ OPOR_Setup_3.32.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
   20 команд в манифесте, баланс скобок во всех 24 модулях,
   запись в «Установка и удаление программ».
 
-**Не проверено:** реальный подхват плагина живым AutoCAD — на этой
-машине AutoCAD нет. Это единственный оставшийся шаг приёмки: поставить,
-запустить AutoCAD, набрать `OPOR`.
+Для текущего канонического кода 3.35 проверена полная сборка Inno Setup 6.7.3:
+24 LSP, `opor.dcl`, DWG-библиотека и bootstrap берутся из актуальных исходников;
+все 26 файлов папки OPOR совпадают со staging побайтово. Результат:
+`output/OPOR_Setup_3.35.0.exe`, версия ресурсов 3.35.0. После установки нового
+EXE остаётся обязательная live-проверка:
+запустить обычный AutoCAD и вызвать `OPOR` напрямую без APPLOAD.
